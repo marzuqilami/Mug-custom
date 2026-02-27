@@ -1,1 +1,2838 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darul Ulum Store - Custom Mug Marketplace</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --off-white: #F8F9FA;
+            --green-primary: #2D5016;
+            --green-light: #4A7C23;
+            --green-dark: #1A3009;
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --text-dark: #1F2937;
+            --text-light: #6B7280;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--off-white);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--white) 0%, var(--off-white) 100%);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .header-top {
+            background: var(--green-primary);
+            color: var(--white);
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        .header-main {
+            padding: 1rem 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 1.5rem;
+            border: 3px solid var(--gold);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .brand-tagline {
+            font-size: 0.75rem;
+            color: var(--gold-dark);
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--green-primary);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .language-toggle {
+            background: var(--white);
+            border: 2px solid var(--green-primary);
+            color: var(--green-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-toggle:hover {
+            background: var(--green-primary);
+            color: var(--white);
+        }
+
+        .cart-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--green-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform 0.3s;
+        }
+
+        .cart-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--gold);
+            color: var(--white);
+            font-size: 0.75rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-btn {
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid var(--gold);
+        }
+
+        .user-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            border: 1px solid var(--gold-light);
+        }
+
+        .dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .dropdown-item:hover {
+            background: var(--off-white);
+            color: var(--green-primary);
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 0.75rem 0.75rem 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 0.75rem 0.75rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--white) 0%, var(--gold-light) 50%, var(--white) 100%);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            color: var(--green-primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-text .highlight {
+            color: var(--gold-dark);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-text .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: rgba(212, 175, 55, 0.2);
+            z-index: -1;
+            transform: skewX(-10deg);
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 6px rgba(45, 80, 22, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(45, 80, 22, 0.3);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 6px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--green-primary);
+            color: var(--green-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--green-primary);
+            color: var(--white);
+        }
+
+        .hero-image {
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .mug-showcase {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--off-white) 100%);
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mug-showcase::before {
+            content: '☕';
+            font-size: 8rem;
+            opacity: 0.1;
+            position: absolute;
+        }
+
+        .mug-preview {
+            font-size: 6rem;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        }
+
+        /* Product Grid */
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--green-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.125rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gold);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--white) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--gold);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green-primary);
+            margin-bottom: 1rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 1.5rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlide 0.3s ease-out;
+            border: 2px solid var(--gold);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--off-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gold-light) 100%);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--green-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--off-white);
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Login Modal Specific */
+        .login-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .login-option {
+            padding: 2rem;
+            border: 2px solid var(--off-white);
+            border-radius: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-option:hover {
+            border-color: var(--gold);
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        .login-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--green-primary);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--green-primary);
+            box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: calc(100vh - 80px);
+            background: var(--off-white);
+        }
+
+        .sidebar {
+            background: var(--white);
+            border-right: 1px solid var(--gold-light);
+            padding: 2rem 1rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+            color: var(--white);
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--gold);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green-primary);
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            color: var(--green-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            background: var(--white);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--green-primary);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--off-white);
+        }
+
+        .data-table tr:hover {
+            background: var(--off-white);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-processing {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-shipped {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-delivered {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            color: var(--white);
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+            z-index: 1500;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-left: 3px solid var(--gold);
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--off-white);
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gold-light);
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 2px solid var(--gold);
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-price {
+            color: var(--green-primary);
+            font-weight: 700;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 2px solid var(--gold-light);
+            background: var(--white);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--green-primary);
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover {
+            border-color: var(--gold);
+            background: var(--gold-light);
+        }
+
+        .payment-method.selected {
+            border-color: var(--green-primary);
+            background: rgba(45, 80, 22, 0.05);
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--white);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 1px solid var(--gold);
+        }
+
+        /* Tracking Section */
+        .tracking-box {
+            background: linear-gradient(135deg, var(--white) 0%, var(--gold-light) 100%);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 2px solid var(--gold);
+            margin: 2rem 0;
+        }
+
+        .tracking-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tracking-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--green-primary);
+            display: none;
+        }
+
+        .tracking-result.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gold);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            background: var(--green-primary);
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            transform: translateX(-5px);
+        }
+
+        .timeline-item.completed::before {
+            background: var(--gold);
+        }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 3000;
+            border-left: 4px solid var(--green-primary);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left-color: var(--green-primary);
+        }
+
+        .toast.error {
+            border-left-color: #EF4444;
+        }
+
+        .toast.info {
+            border-left-color: var(--gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .login-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gold-light);
+            border-top-color: var(--green-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+
+        /* Print Styles */
+        @media print {
+            .header, .sidebar, .no-print {
+                display: none !important;
+            }
+            
+            .dashboard {
+                display: block;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-4 { margin-top: 2rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .w-full { width: 100%; }
+        .flex-col { flex-direction: column; }
+        .gap-4 { gap: 1rem; }
+        .text-gold { color: var(--gold-dark); }
+        .bg-green { background: var(--green-primary); color: var(--white); }
+        
+        /* Voucher Badge */
+        .voucher-badge {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Shipping Info */
+        .shipping-info {
+            background: linear-gradient(135deg, var(--white) 0%, var(--off-white) 100%);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 2px solid var(--green-primary);
+            margin: 1rem 0;
+        }
+
+        .shipping-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed var(--gold-light);
+        }
+
+        .shipping-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: var(--green-primary);
+            font-size: 1.125rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="container flex justify-between items-center">
+                <span data-lang="top_promo">Gratis Ongkir untuk Area Jambi | Custom Mug Berkualitas</span>
+                <div class="flex gap-4">
+                    <span><i class="fab fa-whatsapp"></i> 0812-3456-7890</span>
+                    <span><i class="fas fa-envelope"></i> darululum@store.com</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-main">
+            <div class="container flex justify-between items-center">
+                <div class="logo-section">
+                    <div class="logo" onclick="showPage('home')">
+                        <i class="fas fa-mug-hot"></i>
+                    </div>
+                    <div>
+                        <div class="brand-name font-serif">Darul Ulum Store</div>
+                        <div class="brand-tagline" data-lang="tagline">Custom Mug Premium</div>
+                    </div>
+                </div>
+
+                <nav class="hidden md:block">
+                    <ul class="nav-menu">
+                        <li><a href="#" onclick="showPage('home')" data-lang="nav_home">Beranda</a></li>
+                        <li><a href="#" onclick="showPage('products')" data-lang="nav_products">Produk</a></li>
+                        <li><a href="#" onclick="showPage('tracking')" data-lang="nav_tracking">Lacak Pesanan</a></li>
+                        <li><a href="#" onclick="showPage('seller')" class="text-gold" data-lang="nav_seller">Area Penjual</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <button class="language-toggle" onclick="toggleLanguage()">
+                        <i class="fas fa-globe"></i>
+                        <span id="lang-text">ID</span>
+                    </button>
+
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </button>
+
+                    <div class="user-menu">
+                        <button class="user-btn" onclick="toggleUserMenu()">
+                            <i class="fas fa-user"></i>
+                            <span id="user-name" data-lang="login">Masuk</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown" id="user-dropdown">
+                            <div class="dropdown-item" onclick="openLoginModal()">
+                                <i class="fab fa-whatsapp text-green-600"></i>
+                                <span data-lang="login_wa">Login dengan WhatsApp</span>
+                            </div>
+                            <div class="dropdown-item" onclick="openLoginModal()">
+                                <i class="fab fa-google text-red-500"></i>
+                                <span data-lang="login_google">Login dengan Google</span>
+                            </div>
+                            <div class="dropdown-item hidden" id="menu-profile" onclick="showPage('profile')">
+                                <i class="fas fa-id-card"></i>
+                                <span data-lang="my_profile">Profil Saya</span>
+                            </div>
+                            <div class="dropdown-item hidden" id="menu-orders" onclick="showPage('orders')">
+                                <i class="fas fa-box"></i>
+                                <span data-lang="my_orders">Pesanan Saya</span>
+                            </div>
+                            <div class="dropdown-item hidden" id="menu-logout" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span data-lang="logout">Keluar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+        <!-- Home Page -->
+        <div id="page-home" class="page">
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h1 class="font-serif" data-lang="hero_title">
+                                Buat Mug Custom <span class="highlight">Unikmu</span> Sekarang!
+                            </h1>
+                            <p data-lang="hero_subtitle">
+                                Mug sablon berkualitas premium dengan desain sesuai keinginan Anda. 
+                                Mulai dari Rp 20.000, gratis ongkir untuk area Jambi!
+                            </p>
+                            <div class="flex gap-4">
+                                <button class="btn btn-primary" onclick="showPage('products')">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span data-lang="btn_shop">Belanja Sekarang</span>
+                                </button>
+                                <button class="btn btn-outline" onclick="showPage('seller')">
+                                    <i class="fas fa-store"></i>
+                                    <span data-lang="btn_seller">Area Penjual</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hero-image">
+                            <div class="mug-showcase">
+                                <div class="mug-preview">☕</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title font-serif" data-lang="featured_title">Produk Unggulan</h2>
+                        <p class="section-subtitle" data-lang="featured_subtitle">Mug custom berkualitas dengan harga terbaik</p>
+                    </div>
+                    <div class="products-grid" id="featured-products">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Products Page -->
+        <div id="page-products" class="page hidden">
+            <section class="section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title font-serif" data-lang="all_products">Semua Produk</h2>
+                        <p class="section-subtitle" data-lang="products_subtitle">Pilih mug custom favorit Anda</p>
+                    </div>
+                    <div class="products-grid" id="all-products">
+                        <!-- All products loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Product Detail Modal -->
+        <div id="product-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title font-serif" id="modal-product-name">Detail Produk</h3>
+                    <button class="modal-close" onclick="closeModal('product-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div class="product-image" style="height: 400px; border-radius: 1rem; background: linear-gradient(135deg, var(--off-white), var(--white));">
+                            <div style="font-size: 8rem;" id="modal-product-icon">☕</div>
+                        </div>
+                        <div>
+                            <h2 class="font-serif" style="font-size: 2rem; color: var(--green-primary); margin-bottom: 1rem;" id="modal-product-title">Mug Custom Premium</h2>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--gold-dark); margin-bottom: 1rem;" id="modal-product-price">Rp 20.000</div>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <label class="form-label" data-lang="label_variant">Varian:</label>
+                                <select class="form-select" id="product-variant">
+                                    <option value="standard">Standard (300ml)</option>
+                                    <option value="large">Large (450ml) +Rp5.000</option>
+                                    <option value="couple">Couple Set (2pcs) +Rp15.000</option>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <label class="form-label" data-lang="label_design">Upload Desain:</label>
+                                <input type="file" class="form-input" accept="image/*" id="design-upload">
+                                <small style="color: var(--text-light);" data-lang="design_help">Format: JPG, PNG (Max 5MB)</small>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <label class="form-label" data-lang="label_quantity">Jumlah:</label>
+                                <div class="flex items-center gap-4">
+                                    <button class="btn btn-outline" style="padding: 0.5rem 1rem;" onclick="adjustQty(-1)">-</button>
+                                    <span style="font-size: 1.25rem; font-weight: 700;" id="qty-display">1</span>
+                                    <button class="btn btn-outline" style="padding: 0.5rem 1rem;" onclick="adjustQty(1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="shipping-info">
+                                <div class="shipping-row">
+                                    <span>Harga:</span>
+                                    <span id="shipping-base">Rp 20.000</span>
+                                </div>
+                                <div class="shipping-row">
+                                    <span>Ongkir (Jambi):</span>
+                                    <span class="text-green-600" style="color: var(--green-light); font-weight: 600;">GRATIS</span>
+                                </div>
+                                <div class="shipping-row">
+                                    <span>Total:</span>
+                                    <span id="shipping-total">Rp 20.000</span>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 mt-4">
+                                <button class="btn btn-primary w-full" onclick="addToCart()">
+                                    <i class="fas fa-cart-plus"></i>
+                                    <span data-lang="add_cart">Tambah ke Keranjang</span>
+                                </button>
+                                <button class="btn btn-gold w-full" onclick="buyNow()">
+                                    <i class="fas fa-bolt"></i>
+                                    <span data-lang="buy_now">Beli Sekarang</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seller Dashboard -->
+        <div id="page-seller" class="page hidden">
+            <div class="dashboard">
+                <aside class="sidebar">
+                    <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid var(--gold-light);">
+                        <div class="logo" style="margin: 0 auto 1rem; width: 80px; height: 80px; font-size: 2rem;">
+                            <i class="fas fa-mug-hot"></i>
+                        </div>
+                        <h3 class="font-serif" style="color: var(--green-primary);">Darul Ulum Store</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Admin Panel</p>
+                    </div>
+
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link active" onclick="showSellerTab('dashboard')">
+                                <i class="fas fa-home"></i>
+                                <span data-lang="menu_dashboard">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" onclick="showSellerTab('products')">
+                                <i class="fas fa-box"></i>
+                                <span data-lang="menu_products">Produk</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" onclick="showSellerTab('orders')">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span data-lang="menu_orders">Pesanan</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" onclick="showSellerTab('balance')">
+                                <i class="fas fa-wallet"></i>
+                                <span data-lang="menu_balance">Saldo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" onclick="showSellerTab('shipping')">
+                                <i class="fas fa-shipping-fast"></i>
+                                <span data-lang="menu_shipping">Pengiriman</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" onclick="showSellerTab('settings')">
+                                <i class="fas fa-cog"></i>
+                                <span data-lang="menu_settings">Pengaturan</span>
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+
+                <div class="main-content">
+                    <!-- Seller Dashboard Tab -->
+                    <div id="seller-dashboard" class="seller-tab">
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="seller_overview">Ringkasan Toko</h2>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-label" data-lang="stat_balance">Saldo Tersedia</div>
+                                <div class="stat-value" id="seller-balance">Rp 0</div>
+                                <div class="stat-change" data-lang="stat_pending">Menunggu: Rp 0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label" data-lang="stat_orders">Total Pesanan</div>
+                                <div class="stat-value" id="total-orders">0</div>
+                                <div class="stat-change" style="color: var(--gold-dark);">↑ 12% bulan ini</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label" data-lang="stat_processing">Sedang Diproses</div>
+                                <div class="stat-value" id="processing-count">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label" data-lang="stat_completed">Selesai</div>
+                                <div class="stat-value" id="completed-count">0</div>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                            <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="recent_orders">Pesanan Terbaru</h3>
+                            <div class="data-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th data-lang="th_customer">Pelanggan</th>
+                                            <th data-lang="th_product">Produk</th>
+                                            <th data-lang="th_total">Total</th>
+                                            <th data-lang="th_status">Status</th>
+                                            <th data-lang="th_action">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-orders-table">
+                                        <!-- Orders loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seller Products Tab -->
+                    <div id="seller-products" class="seller-tab hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 style="color: var(--green-primary);" data-lang="manage_products">Kelola Produk</h2>
+                            <button class="btn btn-primary" onclick="openAddProductModal()">
+                                <i class="fas fa-plus"></i>
+                                <span data-lang="add_product">Tambah Produk</span>
+                            </button>
+                        </div>
+                        
+                        <div class="data-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Gambar</th>
+                                        <th data-lang="th_name">Nama</th>
+                                        <th data-lang="th_price">Harga</th>
+                                        <th data-lang="th_stock">Stok</th>
+                                        <th data-lang="th_weight">Berat</th>
+                                        <th data-lang="th_action">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="seller-products-table">
+                                    <!-- Products loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Seller Orders Tab -->
+                    <div id="seller-orders" class="seller-tab hidden">
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="process_orders">Proses Pesanan</h2>
+                        <div class="data-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th data-lang="th_date">Tanggal</th>
+                                        <th data-lang="th_customer">Pelanggan</th>
+                                        <th data-lang="th_items">Item</th>
+                                        <th data-lang="th_total">Total</th>
+                                        <th data-lang="th_status">Status</th>
+                                        <th data-lang="th_action">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-orders-table">
+                                    <!-- All orders here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Seller Balance Tab -->
+                    <div id="seller-balance" class="seller-tab hidden">
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="balance_title">Saldo & Penarikan</h2>
+                        
+                        <div style="background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%); color: var(--white); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
+                            <div style="font-size: 1rem; opacity: 0.9; margin-bottom: 0.5rem;" data-lang="available_balance">Saldo Tersedia</div>
+                            <div style="font-size: 3rem; font-weight: 700;" id="available-balance">Rp 0</div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow);">
+                                <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="withdraw">Tarik Saldo</h3>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="withdraw_amount">Jumlah Penarikan</label>
+                                    <input type="number" class="form-input" id="withdraw-amount" placeholder="Min. Rp 50.000">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="withdraw_method">Metode</label>
+                                    <select class="form-select" id="withdraw-method">
+                                        <option value="bca">Transfer Bank BCA</option>
+                                        <option value="bni">Transfer Bank BNI</option>
+                                        <option value="bri">Transfer Bank BRI</option>
+                                        <option value="mandiri">Transfer Bank Mandiri</option>
+                                        <option value="dana">DANA</option>
+                                        <option value="shopeepay">ShopeePay</option>
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-primary w-full" onclick="processWithdrawal()">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span data-lang="btn_withdraw">Tarik Sekarang</span>
+                                </button>
+                            </div>
+
+                            <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow);">
+                                <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="add_account">Tambah Rekening</h3>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="account_type">Tipe Akun</label>
+                                    <select class="form-select" id="account-type">
+                                        <option value="bank">Rekening Bank</option>
+                                        <option value="ewallet">E-Wallet</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="account_number">Nomor Rekening/Telepon</label>
+                                    <input type="text" class="form-input" id="account-number" placeholder="Contoh: 1234567890">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="account_name">Nama Pemilik</label>
+                                    <input type="text" class="form-input" id="account-name" placeholder="Nama sesuai KTP">
+                                </div>
+
+                                <button class="btn btn-outline w-full" onclick="addAccount()">
+                                    <i class="fas fa-plus"></i>
+                                    <span data-lang="btn_add_account">Simpan Rekening</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                            <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="earnings_report">Laporan Penghasilan</h3>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                                <button class="btn btn-sm btn-outline active" onclick="showEarnings('daily')">Harian</button>
+                                <button class="btn btn-sm btn-outline" onclick="showEarnings('weekly')">Mingguan</button>
+                                <button class="btn btn-sm btn-outline" onclick="showEarnings('monthly')">Bulanan</button>
+                                <button class="btn btn-sm btn-outline" onclick="showEarnings('yearly')">Tahunan</button>
+                            </div>
+                            <div id="earnings-chart" style="height: 300px; background: var(--off-white); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--text-light);">
+                                <i class="fas fa-chart-line" style="font-size: 3rem; margin-right: 1rem;"></i>
+                                <span>Grafik Penghasilan akan ditampilkan di sini</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seller Shipping Tab -->
+                    <div id="seller-shipping" class="seller-tab hidden">
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="shipping_settings">Pengaturan Pengiriman</h2>
+                        
+                        <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-bottom: 2rem;">
+                            <h3 style="margin-bottom: 1.5rem;" data-lang="store_address">Alamat Toko</h3>
+                            <div class="form-group">
+                                <label class="form-label">Nama Toko</label>
+                                <input type="text" class="form-input" value="Darul Ulum Store" id="store-name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Telepon/WA</label>
+                                <input type="text" class="form-input" value="0812-3456-7890" id="store-phone">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Alamat Lengkap</label>
+                                <textarea class="form-input" rows="3" id="store-address">Jl. Pendidikan No. 123, Kab. Tebo, Jambi</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Google Maps Link</label>
+                                <input type="text" class="form-input" placeholder="https://maps.google.com/..." id="store-maps">
+                            </div>
+                            <button class="btn btn-primary" onclick="saveStoreInfo()">
+                                <i class="fas fa-save"></i> Simpan Perubahan
+                            </button>
+                        </div>
+
+                        <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow);">
+                            <h3 style="margin-bottom: 1.5rem;" data-lang="courier_services">Jasa Ekspedisi</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid var(--green-primary); border-radius: 0.75rem; background: rgba(45, 80, 22, 0.05);">
+                                    <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--green-primary);">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 700; color: var(--green-primary);">J&T Express</div>
+                                        <div style="font-size: 0.875rem; color: var(--text-light);">Gratis Ongkir area Jambi</div>
+                                    </div>
+                                    <i class="fas fa-check-circle" style="color: var(--green-primary); font-size: 1.5rem;"></i>
+                                </label>
+                                
+                                <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #E5E7EB; border-radius: 0.75rem; opacity: 0.6;">
+                                    <input type="checkbox" style="width: 20px; height: 20px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 700;">JNE</div>
+                                        <div style="font-size: 0.875rem; color: var(--text-light);">Coming Soon</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seller Settings Tab -->
+                    <div id="seller-settings" class="seller-tab hidden">
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);">Pengaturan Toko</h2>
+                        
+                        <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow);">
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="width: 120px; height: 120px; background: linear-gradient(135deg, var(--green-primary), var(--green-light)); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 3rem; border: 4px solid var(--gold);">
+                                    <i class="fas fa-mug-hot"></i>
+                                </div>
+                                <button class="btn btn-outline" onclick="changeLogo()">
+                                    <i class="fas fa-camera"></i> Ubah Logo
+                                </button>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Nama Toko</label>
+                                <input type="text" class="form-input" value="Darul Ulum Store" id="settings-store-name">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Notifikasi WhatsApp</label>
+                                <input type="text" class="form-input" placeholder="08xxxxxxxxxx" value="081234567890">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Email Notifikasi</label>
+                                <input type="email" class="form-input" placeholder="email@example.com" value="darululum@store.com">
+                            </div>
+
+                            <button class="btn btn-primary w-full" onclick="saveSettings()">
+                                <i class="fas fa-save"></i> Simpan Pengaturan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tracking Page -->
+        <div id="page-tracking" class="page hidden">
+            <section class="section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title font-serif" data-lang="track_title">Lacak Pengiriman</h2>
+                        <p class="section-subtitle" data-lang="track_subtitle">Cek status pesanan Anda dengan nomor resi</p>
+                    </div>
+
+                    <div class="tracking-box">
+                        <h3 style="color: var(--green-primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-truck"></i> J&T Express
+                        </h3>
+                        <p style="color: var(--text-light); margin-bottom: 1rem;">Masukkan nomor resi pengiriman</p>
+                        
+                        <div class="tracking-input-group">
+                            <input type="text" class="form-input" id="tracking-number" placeholder="Contoh: JTE1234567890" style="flex: 1;">
+                            <button class="btn btn-primary" onclick="trackOrder()">
+                                <i class="fas fa-search"></i> Lacak
+                            </button>
+                        </div>
+
+                        <div class="tracking-result" id="tracking-result">
+                            <h4 style="color: var(--green-primary); margin-bottom: 1rem;">Status Pengiriman</h4>
+                            <div class="timeline" id="tracking-timeline">
+                                <!-- Timeline items will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                        <h3 style="color: var(--green-primary); margin-bottom: 1rem;">Informasi Pengiriman</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                            <div style="padding: 1.5rem; background: var(--off-white); border-radius: 0.75rem; border-left: 4px solid var(--gold);">
+                                <h4 style="color: var(--green-primary); margin-bottom: 0.5rem;">Area Gratis Ongkir</h4>
+                                <p>Seluruh wilayah Provinsi Jambi untuk paket < 1kg</p>
+                            </div>
+                            <div style="padding: 1.5rem; background: var(--off-white); border-radius: 0.75rem; border-left: 4px solid var(--green-primary);">
+                                <h4 style="color: var(--green-primary); margin-bottom: 0.5rem;">Estimasi Pengiriman</h4>
+                                <p>Jambi: 1-2 hari<br>Luar Jambi: 3-5 hari</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Orders Page (Customer) -->
+        <div id="page-orders" class="page hidden">
+            <section class="section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title font-serif">Pesanan Saya</h2>
+                    </div>
+                    
+                    <div id="customer-orders-list">
+                        <!-- Orders will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div id="checkout-modal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3 class="modal-title">Checkout</h3>
+                    <button class="modal-close" onclick="closeModal('checkout-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="checkout-items" style="margin-bottom: 1.5rem;">
+                        <!-- Items will be loaded here -->
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Alamat Pengiriman</label>
+                        <textarea class="form-input" rows="3" id="shipping-address" placeholder="Masukkan alamat lengkap..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Provinsi</label>
+                        <select class="form-select" id="province" onchange="calculateShipping()">
+                            <option value="">Pilih Provinsi</option>
+                            <option value="jambi" selected>Jambi</option>
+                            <option value="sumatera-barat">Sumatera Barat</option>
+                            <option value="riau">Riau</option>
+                            <option value="sumatera-selatan">Sumatera Selatan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="shipping-info">
+                        <div class="shipping-row">
+                            <span>Subtotal:</span>
+                            <span id="checkout-subtotal">Rp 0</span>
+                        </div>
+                        <div class="shipping-row">
+                            <span>Ongkir:</span>
+                            <span id="checkout-shipping">Rp 0</span>
+                        </div>
+                        <div class="shipping-row">
+                            <span>Total:</span>
+                            <span id="checkout-total">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--green-primary);">Metode Pembayaran</h4>
+                    <div class="payment-methods">
+                        <div class="payment-method selected" onclick="selectPayment(this, 'bca')">
+                            <div class="payment-icon">🏦</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700;">Transfer BCA</div>
+                                <div style="font-size: 0.875rem; color: var(--text-light);">a.n. Darul Ulum Store</div>
+                            </div>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment(this, 'bni')">
+                            <div class="payment-icon">🏦</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700;">Transfer BNI</div>
+                                <div style="font-size: 0.875rem; color: var(--text-light);">a.n. Darul Ulum Store</div>
+                            </div>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment(this, 'dana')">
+                            <div class="payment-icon" style="color: #0081FF;">💳</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700;">DANA</div>
+                                <div style="font-size: 0.875rem; color: var(--text-light);">0812-3456-7890</div>
+                            </div>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment(this, 'shopeepay')">
+                            <div class="payment-icon" style="color: #EE4D2D;">🛒</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700;">ShopeePay</div>
+                                <div style="font-size: 0.875rem; color: var(--text-light);">0812-3456-7890</div>
+                            </div>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment(this, 'qris')">
+                            <div class="payment-icon">📱</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700;">QRIS</div>
+                                <div style="font-size: 0.875rem; color: var(--text-light);">Scan QR Code</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-full mt-4" onclick="processCheckout()">
+                        <i class="fas fa-check-circle"></i> Bayar Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Modal -->
+        <div id="add-product-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3 class="modal-title">Tambah Produk Baru</h3>
+                    <button class="modal-close" onclick="closeModal('add-product-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Nama Produk</label>
+                        <input type="text" class="form-input" id="new-product-name" placeholder="Contoh: Mug Custom Foto">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Harga (Rp)</label>
+                        <input type="number" class="form-input" id="new-product-price" placeholder="20000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Berat (gram)</label>
+                        <input type="number" class="form-input" id="new-product-weight" placeholder="500">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stok</label>
+                        <input type="number" class="form-input" id="new-product-stock" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Foto Produk</label>
+                        <input type="file" class="form-input" accept="image/*" id="new-product-image">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea class="form-input" rows="3" id="new-product-desc" placeholder="Deskripsi produk..."></textarea>
+                    </div>
+                                        <button class="btn btn-primary w-full" onclick="saveNewProduct()">
+                        <i class="fas fa-save"></i> Simpan Produk
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div id="login-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3 class="modal-title" data-lang="login_title">Masuk ke Akun</h3>
+                    <button class="modal-close" onclick="closeModal('login-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;" data-lang="login_choose">Pilih metode login</p>
+                    
+                    <div class="login-options">
+                        <div class="login-option" onclick="loginWithWhatsApp()">
+                            <div class="login-icon"><i class="fab fa-whatsapp"></i></div>
+                            <h4>WhatsApp</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Login dengan nomor WA</p>
+                        </div>
+                        <div class="login-option" onclick="loginWithGoogle()">
+                            <div class="login-icon"><i class="fab fa-google"></i></div>
+                            <h4>Google</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Login dengan Google</p>
+                        </div>
+                    </div>
+
+                    <div id="whatsapp-login-form" style="display: none; margin-top: 2rem;">
+                        <div class="form-group">
+                            <label class="form-label">Nomor WhatsApp</label>
+                            <input type="text" class="form-input" id="wa-number" placeholder="08xxxxxxxxxx">
+                        </div>
+                        <button class="btn btn-primary w-full" onclick="verifyWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Kirim Kode Verifikasi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3 style="font-size: 1.25rem;"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</h3>
+            <button style="background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer;" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <div class="empty-state">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Keranjang masih kosong</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">Rp 0</span>
+            </div>
+            <button class="btn btn-primary w-full" onclick="openCheckout()">
+                <i class="fas fa-credit-card"></i> Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operasi berhasil!</span>
+    </div>
+
+    <script>
+        // Data & State Management
+        let currentUser = null;
+        let currentLang = 'id';
+        let cart = [];
+        let products = [
+            { id: 1, name: 'Mug Custom Foto', price: 20000, weight: 400, stock: 50, image: '☕', variants: ['Standard', 'Large', 'Couple'] },
+            { id: 2, name: 'Mug Polos Premium', price: 20000, weight: 350, stock: 100, image: '☕', variants: ['Putih', 'Hitam', 'Merah'] },
+            { id: 3, name: 'Mug Couple Set', price: 35000, weight: 800, stock: 30, image: '☕', variants: ['Love Design', 'Custom Nama'] },
+            { id: 4, name: 'Mug Magic (Sensitif Suhu)', price: 45000, weight: 450, stock: 20, image: '☕', variants: ['Hitam', 'Biru', 'Merah'] }
+        ];
+        
+        let orders = [];
+        let sellerBalance = 0;
+        let pendingBalance = 0;
+        let vouchers = [];
+
+        // Translations
+        const translations = {
+            id: {
+                top_promo: 'Gratis Ongkir untuk Area Jambi | Custom Mug Berkualitas',
+                tagline: 'Custom Mug Premium',
+                nav_home: 'Beranda',
+                nav_products: 'Produk',
+                nav_tracking: 'Lacak Pesanan',
+                nav_seller: 'Area Penjual',
+                login: 'Masuk',
+                login_wa: 'Login dengan WhatsApp',
+                login_google: 'Login dengan Google',
+                my_profile: 'Profil Saya',
+                my_orders: 'Pesanan Saya',
+                logout: 'Keluar',
+                hero_title: 'Buat Mug Custom Unikmu Sekarang!',
+                hero_subtitle: 'Mug sablon berkualitas premium dengan desain sesuai keinginan Anda. Mulai dari Rp 20.000, gratis ongkir untuk area Jambi!',
+                btn_shop: 'Belanja Sekarang',
+                btn_seller: 'Area Penjual',
+                featured_title: 'Produk Unggulan',
+                featured_subtitle: 'Mug custom berkualitas dengan harga terbaik',
+                all_products: 'Semua Produk',
+                products_subtitle: 'Pilih mug custom favorit Anda',
+                label_variant: 'Varian:',
+                label_design: 'Upload Desain:',
+                design_help: 'Format: JPG, PNG (Max 5MB)',
+                label_quantity: 'Jumlah:',
+                add_cart: 'Tambah ke Keranjang',
+                buy_now: 'Beli Sekarang',
+                seller_overview: 'Ringkasan Toko',
+                stat_balance: 'Saldo Tersedia',
+                stat_pending: 'Menunggu: Rp 0',
+                stat_orders: 'Total Pesanan',
+                stat_processing: 'Sedang Diproses',
+                stat_completed: 'Selesai',
+                recent_orders: 'Pesanan Terbaru',
+                th_customer: 'Pelanggan',
+                th_product: 'Produk',
+                th_total: 'Total',
+                th_status: 'Status',
+                th_action: 'Aksi',
+                manage_products: 'Kelola Produk',
+                add_product: 'Tambah Produk',
+                th_name: 'Nama',
+                th_price: 'Harga',
+                th_stock: 'Stok',
+                th_weight: 'Berat',
+                process_orders: 'Proses Pesanan',
+                th_date: 'Tanggal',
+                th_items: 'Item',
+                balance_title: 'Saldo & Penarikan',
+                available_balance: 'Saldo Tersedia',
+                withdraw: 'Tarik Saldo',
+                withdraw_amount: 'Jumlah Penarikan',
+                withdraw_method: 'Metode',
+                btn_withdraw: 'Tarik Sekarang',
+                add_account: 'Tambah Rekening',
+                account_type: 'Tipe Akun',
+                account_number: 'Nomor Rekening/Telepon',
+                account_name: 'Nama Pemilik',
+                btn_add_account: 'Simpan Rekening',
+                earnings_report: 'Laporan Penghasilan',
+                shipping_settings: 'Pengaturan Pengiriman',
+                store_address: 'Alamat Toko',
+                courier_services: 'Jasa Ekspedisi',
+                track_title: 'Lacak Pengiriman',
+                track_subtitle: 'Cek status pesanan Anda dengan nomor resi',
+                login_title: 'Masuk ke Akun',
+                login_choose: 'Pilih metode login',
+                menu_dashboard: 'Dashboard',
+                menu_products: 'Produk',
+                menu_orders: 'Pesanan',
+                menu_balance: 'Saldo',
+                menu_shipping: 'Pengiriman',
+                menu_settings: 'Pengaturan'
+            },
+            en: {
+                top_promo: 'Free Shipping for Jambi Area | Premium Custom Mugs',
+                tagline: 'Premium Custom Mugs',
+                nav_home: 'Home',
+                nav_products: 'Products',
+                nav_tracking: 'Track Order',
+                nav_seller: 'Seller Area',
+                login: 'Login',
+                login_wa: 'Login with WhatsApp',
+                login_google: 'Login with Google',
+                my_profile: 'My Profile',
+                my_orders: 'My Orders',
+                logout: 'Logout',
+                hero_title: 'Create Your Unique Custom Mug Now!',
+                hero_subtitle: 'Premium quality screen-printed mugs with your custom design. Starting from Rp 20,000, free shipping for Jambi area!',
+                btn_shop: 'Shop Now',
+                btn_seller: 'Seller Area',
+                featured_title: 'Featured Products',
+                featured_subtitle: 'Quality custom mugs at best prices',
+                all_products: 'All Products',
+                products_subtitle: 'Choose your favorite custom mug',
+                label_variant: 'Variant:',
+                label_design: 'Upload Design:',
+                design_help: 'Format: JPG, PNG (Max 5MB)',
+                label_quantity: 'Quantity:',
+                add_cart: 'Add to Cart',
+                buy_now: 'Buy Now',
+                seller_overview: 'Store Overview',
+                stat_balance: 'Available Balance',
+                stat_pending: 'Pending: Rp 0',
+                stat_orders: 'Total Orders',
+                stat_processing: 'Processing',
+                stat_completed: 'Completed',
+                recent_orders: 'Recent Orders',
+                th_customer: 'Customer',
+                th_product: 'Product',
+                th_total: 'Total',
+                th_status: 'Status',
+                th_action: 'Action',
+                manage_products: 'Manage Products',
+                add_product: 'Add Product',
+                th_name: 'Name',
+                th_price: 'Price',
+                th_stock: 'Stock',
+                th_weight: 'Weight',
+                process_orders: 'Process Orders',
+                th_date: 'Date',
+                th_items: 'Items',
+                balance_title: 'Balance & Withdrawal',
+                available_balance: 'Available Balance',
+                withdraw: 'Withdraw Balance',
+                withdraw_amount: 'Withdrawal Amount',
+                withdraw_method: 'Method',
+                btn_withdraw: 'Withdraw Now',
+                add_account: 'Add Account',
+                account_type: 'Account Type',
+                account_number: 'Account Number/Phone',
+                account_name: 'Account Name',
+                btn_add_account: 'Save Account',
+                earnings_report: 'Earnings Report',
+                shipping_settings: 'Shipping Settings',
+                store_address: 'Store Address',
+                courier_services: 'Courier Services',
+                track_title: 'Track Shipment',
+                track_subtitle: 'Check your order status with tracking number',
+                login_title: 'Login to Account',
+                login_choose: 'Choose login method',
+                menu_dashboard: 'Dashboard',
+                menu_products: 'Products',
+                menu_orders: 'Orders',
+                menu_balance: 'Balance',
+                menu_shipping: 'Shipping',
+                menu_settings: 'Settings'
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            updateCartUI();
+            checkAuth();
+        });
+
+        // Language Toggle
+        function toggleLanguage() {
+            currentLang = currentLang === 'id' ? 'en' : 'id';
+            document.getElementById('lang-text').textContent = currentLang.toUpperCase();
+            applyTranslations();
+            showToast(currentLang === 'id' ? 'Bahasa diubah ke Indonesia' : 'Language changed to English', 'info');
+        }
+
+        function applyTranslations() {
+            const texts = translations[currentLang];
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (texts[key]) {
+                    el.textContent = texts[key];
+                }
+            });
+        }
+
+        // Navigation
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${pageName}`).classList.remove('hidden');
+            
+            if (pageName === 'products') loadAllProducts();
+            if (pageName === 'seller') loadSellerDashboard();
+            if (pageName === 'orders') loadCustomerOrders();
+            
+            window.scrollTo(0, 0);
+        }
+
+        function showSellerTab(tabName) {
+            document.querySelectorAll('.seller-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById(`seller-${tabName}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            event.target.closest('.sidebar-link').classList.add('active');
+            
+            if (tabName === 'products') loadSellerProducts();
+            if (tabName === 'orders') loadSellerOrders();
+        }
+
+        // Product Functions
+        function loadProducts() {
+            const container = document.getElementById('featured-products');
+            container.innerHTML = products.map(p => createProductCard(p)).join('');
+        }
+
+        function loadAllProducts() {
+            const container = document.getElementById('all-products');
+            container.innerHTML = products.map(p => createProductCard(p)).join('');
+        }
+
+        function createProductCard(product) {
+            return `
+                <div class="product-card" onclick="openProductModal(${product.id})">
+                    <div class="product-image">
+                        <div style="font-size: 4rem;">${product.image}</div>
+                        <span class="product-badge">Custom</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">Rp ${formatNumber(product.price)}</div>
+                        <div class="product-actions" onclick="event.stopPropagation()">
+                            <button class="btn btn-outline btn-sm" onclick="quickAddToCart(${product.id})">
+                                <i class="fas fa-cart-plus"></i> Keranjang
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="quickBuy(${product.id})">
+                                Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let currentProduct = null;
+        let currentQty = 1;
+
+        function openProductModal(productId) {
+            currentProduct = products.find(p => p.id === productId);
+            if (!currentProduct) return;
+            
+            document.getElementById('modal-product-name').textContent = currentProduct.name;
+            document.getElementById('modal-product-title').textContent = currentProduct.name;
+            document.getElementById('modal-product-price').textContent = `Rp ${formatNumber(currentProduct.price)}`;
+            document.getElementById('shipping-base').textContent = `Rp ${formatNumber(currentProduct.price)}`;
+            
+            updateTotal();
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        function adjustQty(delta) {
+            currentQty = Math.max(1, currentQty + delta);
+            document.getElementById('qty-display').textContent = currentQty;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            if (!currentProduct) return;
+            const variantSelect = document.getElementById('product-variant');
+            let additionalPrice = 0;
+            
+            if (variantSelect.value === 'large') additionalPrice = 5000;
+            if (variantSelect.value === 'couple') additionalPrice = 15000;
+            
+            const total = (currentProduct.price + additionalPrice) * currentQty;
+            document.getElementById('shipping-total').textContent = `Rp ${formatNumber(total)}`;
+        }
+
+        function addToCart() {
+            if (!currentProduct) return;
+            
+            const variant = document.getElementById('product-variant').value;
+            const cartItem = {
+                ...currentProduct,
+                cartId: Date.now(),
+                qty: currentQty,
+                variant: variant,
+                total: calculateItemTotal(currentProduct, variant, currentQty)
+            };
+            
+            cart.push(cartItem);
+            updateCartUI();
+            closeModal('product-modal');
+            showToast('Produk ditambahkan ke keranjang!', 'success');
+            
+            // Reset
+            currentQty = 1;
+            document.getElementById('qty-display').textContent = 1;
+        }
+
+        function calculateItemTotal(product, variant, qty) {
+            let additional = 0;
+            if (variant === 'large') additional = 5000;
+            if (variant === 'couple') additional = 15000;
+            return (product.price + additional) * qty;
+        }
+
+        function quickAddToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push({
+                    ...product,
+                    cartId: Date.now(),
+                    qty: 1,
+                    variant: 'standard',
+                    total: product.price
+                });
+                updateCartUI();
+                showToast('Ditambahkan ke keranjang!', 'success');
+            }
+        }
+
+        function quickBuy(productId) {
+            quickAddToCart(productId);
+            openCheckout();
+        }
+
+        function buyNow() {
+            addToCart();
+            openCheckout();
+        }
+
+        // Cart Functions
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('active');
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-count').textContent = count;
+            
+            const container = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-basket"></i>
+                        <p>Keranjang masih kosong</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-image">${item.image}</div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">${item.variant}</div>
+                            <div class="cart-item-price">Rp ${formatNumber(item.total)}</div>
+                        </div>
+                        <button onclick="removeFromCart(${item.cartId})" style="background: none; border: none; color: #EF4444; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+            
+            const total = cart.reduce((sum, item) => sum + item.total, 0);
+            document.getElementById('cart-total-price').textContent = `Rp ${formatNumber(total)}`;
+        }
+
+        function removeFromCart(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            updateCartUI();
+        }
+
+        // Checkout Functions
+        function openCheckout() {
+            if (cart.length === 0) {
+                showToast('Keranjang masih kosong!', 'error');
+                return;
+            }
+            
+            const container = document.getElementById('checkout-items');
+            container.innerHTML = cart.map(item => `
+                <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--off-white); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                    <div>
+                        <div style="font-weight: 600;">${item.name}</div>
+                        <div style="font-size: 0.875rem; color: var(--text-light);">${item.qty}x ${item.variant}</div>
+                    </div>
+                    <div style="font-weight: 700;">Rp ${formatNumber(item.total)}</div>
+                </div>
+            `).join('');
+            
+            calculateShipping();
+            document.getElementById('checkout-modal').classList.add('active');
+            toggleCart();
+        }
+
+        function calculateShipping() {
+            const province = document.getElementById('province').value;
+            const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+            let shipping = 0;
+            
+            if (province !== 'jambi') {
+                // Calculate based on weight (simplified)
+                const totalWeight = cart.reduce((sum, item) => sum + (item.weight * item.qty), 0);
+                shipping = Math.ceil(totalWeight / 1000) * 15000; // Rp 15,000 per kg for outside Jambi
+            }
+            
+            document.getElementById('checkout-subtotal').textContent = `Rp ${formatNumber(subtotal)}`;
+            document.getElementById('checkout-shipping').textContent = shipping === 0 ? 'GRATIS' : `Rp ${formatNumber(shipping)}`;
+            document.getElementById('checkout-total').textContent = `Rp ${formatNumber(subtotal + shipping)}`;
+        }
+
+        let selectedPayment = 'bca';
+
+        function selectPayment(el, method) {
+            document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedPayment = method;
+        }
+
+        function processCheckout() {
+            const address = document.getElementById('shipping-address').value;
+            if (!address) {
+                showToast('Silakan isi alamat pengiriman!', 'error');
+                return;
+            }
+            
+            const province = document.getElementById('province').value;
+            const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+            const shippingText = document.getElementById('checkout-shipping').textContent;
+            const shipping = shippingText === 'GRATIS' ? 0 : parseInt(shippingText.replace(/\D/g, ''));
+            const total = subtotal + shipping;
+            
+            const order = {
+                id: 'ORD' + Date.now(),
+                items: [...cart],
+                address: address,
+                province: province,
+                subtotal: subtotal,
+                shipping: shipping,
+                total: total,
+                payment: selectedPayment,
+                status: 'processing',
+                date: new Date().toISOString(),
+                customer: currentUser || { name: 'Guest', phone: '-' },
+                tracking: 'JTE' + Math.random().toString(36).substr(2, 9).toUpperCase()
+            };
+            
+            orders.push(order);
+            pendingBalance += subtotal; // Seller gets product price (excluding shipping)
+            
+            cart = [];
+            updateCartUI();
+            closeModal('checkout-modal');
+            
+            showToast(`Pesanan berhasil! Status: Sedang diproses. Resi: ${order.tracking}`, 'success');
+            
+            // Simulate notification
+            setTimeout(() => {
+                showToast('Pesanan sedang diproses, Terimakasih sudah memesan', 'info');
+            }, 2000);
+        }
+
+        // Tracking Functions
+        function trackOrder() {
+            const trackingNum = document.getElementById('tracking-number').value.trim();
+            if (!trackingNum) {
+                showToast('Masukkan nomor resi!', 'error');
+                return;
+            }
+            
+            const order = orders.find(o => o.tracking === trackingNum);
+            const resultDiv = document.getElementById('tracking-result');
+            const timelineDiv = document.getElementById('tracking-timeline');
+            
+            if (!order) {
+                // Demo tracking data
+                timelineDiv.innerHTML = `
+                    <div class="timeline-item completed">
+                        <div style="font-weight: 700;">Pesanan Dibuat</div>
+                        <div style="font-size: 0.875rem; color: var(--text-light);">27 Feb 2026, 10:00 WIB</div>
+                    </div>
+                    <div class="timeline-item completed">
+                        <div style="font-weight: 700;">Pesanan Diproses</div>
+                        <div style="font-size: 0.875rem; color: var(--text-light);">27 Feb 2026, 14:30 WIB</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div style="font-weight: 700; color: var(--green-primary);">Sedang Dikirim</div>
+                        <div style="font-size: 0.875rem; color: var(--text-light);">Sedang diantar ke alamat tujuan</div>
+                        <div style="font-size: 0.875rem; color: var(--gold-dark);">Estimasi sampai: 28 Feb 2026</div>
+                    </div>
+                `;
+            } else {
+                let statusHTML = '';
+                if (order.status === 'processing') {
+                    statusHTML = `
+                        <div class="timeline-item completed">
+                            <div style="font-weight: 700;">Pesanan Dibuat</div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">${new Date(order.date).toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div style="font-weight: 700; color: var(--green-primary);">Sedang Diproses</div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">Pesanan sedang diproses, Terimakasih sudah memesan</div>
+                        </div>
+                    `;
+                } else if (order.status === 'shipped') {
+                    statusHTML = `
+                        <div class="timeline-item completed">
+                            <div style="font-weight: 700;">Pesanan Dibuat</div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">${new Date(order.date).toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="timeline-item completed">
+                            <div style="font-weight: 700;">Pesanan Diproses</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div style="font-weight: 700; color: var(--green-primary);">Sedang Dikirim</div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">Sedang diantar ke alamat tujuan</div>
+                        </div>
+                    `;
+                }
+                timelineDiv.innerHTML = statusHTML;
+            }
+            
+            resultDiv.classList.add('active');
+        }
+
+        // Seller Functions
+        function loadSellerDashboard() {
+            document.getElementById('seller-balance').textContent = `Rp ${formatNumber(sellerBalance)}`;
+            document.getElementById('total-orders').textContent = orders.length;
+            document.getElementById('processing-count').textContent = orders.filter(o => o.status === 'processing').length;
+            document.getElementById('completed-count').textContent = orders.filter(o => o.status === 'completed').length;
+            
+            const tbody = document.getElementById('recent-orders-table');
+            tbody.innerHTML = orders.slice(0, 5).map(o => `
+                <tr>
+                    <td>${o.id}</td>
+                    <td>${o.customer.name}</td>
+                    <td>${o.items.length} item</td>
+                    <td>Rp ${formatNumber(o.total)}</td>
+                    <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="processOrder('${o.id}')">Proses</button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="6" style="text-align: center;">Belum ada pesanan</td></tr>';
+        }
+
+        function loadSellerProducts() {
+            const tbody = document.getElementById('seller-products-table');
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td style="font-size: 2rem; text-align: center;">${p.image}</td>
+                    <td>${p.name}</td>
+                    <td>Rp ${formatNumber(p.price)}</td>
+                    <td>${p.stock}</td>
+                    <td>${p.weight}g</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="editProduct(${p.id})">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadSellerOrders() {
+            const tbody = document.getElementById('all-orders-table');
+            tbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td>${o.id}</td>
+                    <td>${new Date(o.date).toLocaleDateString('id-ID')}</td>
+                    <td>${o.customer.name}</td>
+                    <td>${o.items.map(i => i.name).join(', ')}</td>
+                    <td>Rp ${formatNumber(o.total)}</td>
+                    <td><span class="status-badge status-${o.status}">${getStatusLabel(o.status)}</span></td>
+                    <td>
+                        ${o.status === 'processing' ? 
+                            `<button class="btn btn-sm btn-primary" onclick="shipOrder('${o.id}')">Kirim</button>` : 
+                            o.status === 'shipped' ? 
+                            `<button class="btn btn-sm btn-gold" disabled>Dikirim</button>` :
+                            `<button class="btn btn-sm btn-outline" disabled>Selesai</button>`
+                        }
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="7" style="text-align: center;">Belum ada pesanan</td></tr>';
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'processing': 'Diproses',
+                'shipped': 'Dikirim',
+                'delivered': 'Diterima',
+                'completed': 'Selesai'
+            };
+            return labels[status] || status;
+        }
+
+        function processOrder(orderId) {
+            showToast('Pesanan sedang diproses, Terimakasih sudah memesan', 'success');
+            loadSellerDashboard();
+        }
+
+        function shipOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = 'shipped';
+                showToast('Status diupdate: Pesanan sedang dikirim', 'success');
+                loadSellerOrders();
+                
+                // Simulate delivery after 10 seconds for demo
+                setTimeout(() => {
+                    showToast(`Pesanan ${orderId} telah sampai! Menunggu konfirmasi pembeli.`, 'info');
+                }, 10000);
+            }
+        }
+
+        function openAddProductModal() {
+            document.getElementById('add-product-modal').classList.add('active');
+        }
+
+        function saveNewProduct() {
+            const name = document.getElementById('new-product-name').value;
+            const price = parseInt(document.getElementById('new-product-price').value);
+            const weight = parseInt(document.getElementById('new-product-weight').value);
+            const stock = parseInt(document.getElementById('new-product-stock').value);
+            
+            if (!name || !price) {
+                showToast('Nama dan harga wajib diisi!', 'error');
+                return;
+            }
+            
+            const newProduct = {
+                id: products.length + 1,
+                name: name,
+                price: price,
+                weight: weight || 400,
+                stock: stock || 50,
+                image: '☕',
+                variants: ['Standard']
+            };
+            
+            products.push(newProduct);
+            closeModal('add-product-modal');
+            showToast('Produk berhasil ditambahkan!', 'success');
+            loadSellerProducts();
+            
+            // Clear form
+            document.getElementById('new-product-name').value = '';
+            document.getElementById('new-product-price').value = '';
+            document.getElementById('new-product-weight').value =value = '';
+            document.getElementById('new-product-weight').value = '';
+            document.getElementById('new-product-stock').value = '';
+        }
+
+        // Balance & Withdrawal
+        function processWithdrawal() {
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            if (!amount || amount < 50000) {
+                showToast('Minimal penarikan Rp 50.000!', 'error');
+                return;
+            }
+            if (amount > sellerBalance) {
+                showToast('Saldo tidak mencukupi!', 'error');
+                return;
+            }
+            
+            sellerBalance -= amount;
+            document.getElementById('available-balance').textContent = `Rp ${formatNumber(sellerBalance)}`;
+            showToast(`Penarikan Rp ${formatNumber(amount)} berhasil diproses!`, 'success');
+            document.getElementById('withdraw-amount').value = '';
+        }
+
+        function addAccount() {
+            showToast('Rekening berhasil ditambahkan!', 'success');
+            document.getElementById('account-number').value = '';
+            document.getElementById('account-name').value = '';
+        }
+
+        // Customer Orders
+        function loadCustomerOrders() {
+            const container = document.getElementById('customer-orders-list');
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <p>Belum ada pesanan</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = orders.map(o => `
+                <div style="background: var(--white); padding: 1.5rem; border-radius: 1rem; box-shadow: var(--shadow); margin-bottom: 1rem; border-left: 4px solid var(--gold);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <div>
+                            <div style="font-weight: 700; color: var(--green-primary);">${o.id}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">${new Date(o.date).toLocaleDateString('id-ID')}</div>
+                        </div>
+                        <span class="status-badge status-${o.status}">${getStatusLabel(o.status)}</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        ${o.items.map(i => `
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--off-white);">
+                                <span>${i.name} (${i.variant}) x${i.qty}</span>
+                                <span>Rp ${formatNumber(i.total)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">Total: <strong style="color: var(--green-primary);">Rp ${formatNumber(o.total)}</strong></div>
+                            <div style="font-size: 0.875rem; color: var(--gold-dark);">Resi: ${o.tracking}</div>
+                        </div>
+                        ${o.status === 'shipped' ? `
+                            <button class="btn btn-primary" onclick="confirmReceived('${o.id}')">
+                                <i class="fas fa-check"></i> Pesanan Diterima
+                            </button>
+                        ` : ''}
+                    </div>
+                    ${o.voucherClaimed ? `
+                        <div style="margin-top: 1rem; padding: 0.75rem; background: var(--gold-light); border-radius: 0.5rem;">
+                            <span class="voucher-badge">
+                                <i class="fas fa-ticket-alt"></i> Voucher Rp 2.000 Aktif
+                            </span>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function confirmReceived(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = 'completed';
+                order.voucherClaimed = true;
+                
+                // Transfer to seller balance (simulated)
+                setTimeout(() => {
+                    sellerBalance += order.subtotal;
+                    pendingBalance -= order.subtotal;
+                    showToast('Saldo telah ditransfer ke penjual!', ' 'success');
+                    if (document.getElementById('page-seller').classList.contains('hidden') === false) {
+                        loadSellerDashboard();
+                    }
+                }, 1000);
+                
+                showToast('Terima kasih! Voucher potongan Rp 2.000 telah aktif.', 'success');
+                loadCustomerOrders();
+            }
+        }
+
+        // Auth Functions
+        function toggleUserMenu() {
+            document.getElementById('user-dropdown').classList.toggle('active');
+        }
+
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function loginWithWhatsApp() {
+            document.getElementById('whatsapp-login-form').style.display = 'block';
+        }
+
+        function verifyWhatsApp() {
+            const phone = document.getElementById('wa-number').value;
+            if (phone.length < 10) {
+                showToast('Nomor tidak valid!', 'error');
+                return;
+            }
+            
+            currentUser = { name: 'User ' + phone.slice(-4), phone: phone, type: 'whatsapp' };
+            closeModal('login-modal');
+            updateAuthUI();
+            showToast('Login berhasil dengan WhatsApp!', 'success');
+        }
+
+        function loginWithGoogle() {
+            currentUser = { name: 'Google User', email: 'user@gmail.com', type: 'google' };
+            closeModal('login-modal');
+            updateAuthUI();
+            showToast('Login berhasil dengan Google!', 'success');
+        }
+
+        function updateAuthUI() {
+            if (currentUser) {
+                document.getElementById('user-name').textContent = currentUser.name;
+                document.getElementById('menu-profile').classList.remove('hidden');
+                document.getElementById('menu-orders').classList.remove('hidden');
+                document.getElementById('menu-logout').classList.remove('hidden');
+                document.querySelector('.dropdown-item:first-child').style.display = 'none';
+                document.querySelector('.dropdown-item:nth-child(2)').style.display = 'none';
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('user-name').textContent = currentLang === 'id' ? 'Masuk' : 'Login';
+            document.getElementById('menu-profile').classList.add('hidden');
+            document.getElementById('menu-orders').classList.add('hidden');
+            document.getElementById('menu-logout').classList.add('hidden');
+            document.querySelector('.dropdown-item:first-child').style.display = 'flex';
+            document.querySelector('.dropdown-item:nth-child(2)').style.display = 'flex';
+            showToast('Berhasil logout!', 'info');
+        }
+
+        function checkAuth() {
+            // Check if user is logged in (simulated)
+        }
+
+        // Utility Functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast ${type} show`;
+            document.getElementById('toast-message').textContent = message;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function saveStoreInfo() {
+            showToast('Informasi toko disimpan!', 'success');
+        }
+
+        function changeLogo() {
+            showToast('Fitur upload logo akan membuka file picker', 'info');
+        }
+
+        function saveSettings() {
+            showToast('Pengaturan disimpan!', 'success');
+        }
+
+        function showEarnings(period) {
+            showToast(`Menampilkan laporan ${period}`, 'info');
+        }
+
+        function editProduct(id) {
+            showToast('Edit produk ID: ' + id, 'info');
+        }
+
+        // Close modals on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Auto-refresh seller balance simulation
+        setInterval(() => {
+            if (pendingBalance > 0) {
+                // Simulate auto-transfer after delay
+            }
+        }, 60000); // Check every minute
+    </script>
+</body>
+</html>
