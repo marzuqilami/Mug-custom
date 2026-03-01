@@ -60,10 +60,15 @@
         .user-btn { background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%); color: var(--white); border: none; padding: 0.5rem 1rem; border-radius: 9999px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: all 0.3s; border: 2px solid var(--gold); }
         .user-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3); }
         
-        .dropdown { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: var(--white); border-radius: 0.75rem; box-shadow: var(--shadow-lg); min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; border: 1px solid var(--gold-light); z-index: 1001; }
+        .dropdown { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: var(--white); border-radius: 0.75rem; box-shadow: var(--shadow-lg); min-width: 220px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; border: 1px solid var(--gold-light); z-index: 1001; }
         .dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .dropdown-item { padding: 0.75rem 1rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.75rem; color: var(--text-dark); border: none; background: none; width: 100%; text-align: left; font-size: 0.875rem; }
         .dropdown-item:hover { background: var(--off-white); color: var(--green-primary); }
+        
+        /* Role Badge */
+        .role-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-left: 0.5rem; }
+        .role-seller { background: var(--gold); color: var(--white); }
+        .role-buyer { background: var(--green-light); color: var(--white); }
         
         /* Hero */
         .hero { background: linear-gradient(135deg, var(--white) 0%, var(--gold-light) 50%, var(--white) 100%); padding: 4rem 0; position: relative; overflow: hidden; }
@@ -116,6 +121,15 @@
         .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
         .modal-close:hover { background: var(--off-white); color: var(--text-dark); }
         .modal-body { padding: 2rem; }
+        
+        /* Login Type Selection */
+        .login-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+        .login-type-card { padding: 2rem; border: 3px solid var(--off-white); border-radius: 1rem; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .login-type-card:hover { border-color: var(--gold); background: var(--gold-light); transform: translateY(-5px); }
+        .login-type-card.selected { border-color: var(--green-primary); background: rgba(45, 80, 22, 0.05); }
+        .login-type-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .login-type-title { font-size: 1.25rem; font-weight: 700; color: var(--green-primary); margin-bottom: 0.5rem; }
+        .login-type-desc { font-size: 0.875rem; color: var(--text-light); }
         
         /* Forms */
         .form-group { margin-bottom: 1.5rem; }
@@ -205,11 +219,6 @@
         .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-light); }
         .empty-state i { font-size: 4rem; margin-bottom: 1rem; color: var(--gold); }
         
-        .login-options { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
-        .login-option { padding: 2rem; border: 2px solid var(--off-white); border-radius: 1rem; text-align: center; cursor: pointer; transition: all 0.3s; }
-        .login-option:hover { border-color: var(--gold); background: var(--gold-light); transform: translateY(-2px); }
-        .login-icon { font-size: 3rem; margin-bottom: 1rem; color: var(--green-primary); }
-        
         @media (max-width: 768px) {
             .hero-content { grid-template-columns: 1fr; text-align: center; }
             .hero-text h1 { font-size: 2.5rem; }
@@ -217,7 +226,7 @@
             .sidebar { display: none; }
             .cart-sidebar { width: 100%; right: -100%; }
             .nav-menu { display: none; }
-            .login-options { grid-template-columns: 1fr; }
+            .login-type-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -246,11 +255,12 @@
                 </div>
 
                 <nav class="hidden md:block">
-                    <ul class="nav-menu">
+                    <ul class="nav-menu" id="nav-menu">
                         <li><a data-page="home" data-lang="nav_home">Beranda</a></li>
                         <li><a data-page="products" data-lang="nav_products">Produk</a></li>
                         <li><a data-page="tracking" data-lang="nav_tracking">Lacak Pesanan</a></li>
-                        <li><a data-page="seller" style="color: var(--gold-dark);" data-lang="nav_seller">Area Penjual</a></li>
+                        <!-- Area Penjual hanya muncul jika login sebagai seller -->
+                        <li id="nav-seller" class="hidden"><a data-page="seller" style="color: var(--gold-dark);" data-lang="nav_seller">Area Penjual</a></li>
                     </ul>
                 </nav>
 
@@ -260,6 +270,7 @@
                         <span id="lang-text">ID</span>
                     </button>
 
+                    <!-- Cart hanya untuk buyer -->
                     <button class="cart-btn" id="btn-cart">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count" id="cart-count">0</span>
@@ -269,17 +280,17 @@
                         <button class="user-btn" id="btn-user">
                             <i class="fas fa-user"></i>
                             <span id="user-name" data-lang="login">Masuk</span>
+                            <span id="user-role" class="role-badge hidden"></span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="dropdown" id="user-dropdown">
-                            <button class="dropdown-item" id="menu-login-wa">
-                                <i class="fab fa-whatsapp text-green-600"></i>
-                                <span data-lang="login_wa">Login dengan WhatsApp</span>
+                            <!-- Sebelum Login -->
+                            <button class="dropdown-item" id="menu-login">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Login / Daftar</span>
                             </button>
-                            <button class="dropdown-item" id="menu-login-google">
-                                <i class="fab fa-google text-red-500"></i>
-                                <span data-lang="login_google">Login dengan Google</span>
-                            </button>
+                            
+                            <!-- Setelah Login - Buyer -->
                             <button class="dropdown-item hidden" id="menu-profile" data-page="profile">
                                 <i class="fas fa-id-card"></i>
                                 <span data-lang="my_profile">Profil Saya</span>
@@ -288,6 +299,14 @@
                                 <i class="fas fa-box"></i>
                                 <span data-lang="my_orders">Pesanan Saya</span>
                             </button>
+                            
+                            <!-- Setelah Login - Seller -->
+                            <button class="dropdown-item hidden" id="menu-seller-dashboard" data-page="seller">
+                                <i class="fas fa-store"></i>
+                                <span>Dashboard Penjual</span>
+                            </button>
+                            
+                            <!-- Logout -->
                             <button class="dropdown-item hidden" id="menu-logout">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span data-lang="logout">Keluar</span>
@@ -314,12 +333,12 @@
                                 Mug sablon berkualitas premium dengan desain sesuai keinginan Anda. 
                                 Mulai dari Rp 20.000, gratis ongkir untuk area Jambi!
                             </p>
-                            <div class="flex gap-4">
+                            <div class="flex gap-4" id="hero-buttons">
                                 <button class="btn btn-primary" id="btn-shop-now">
                                     <i class="fas fa-shopping-bag"></i>
                                     <span data-lang="btn_shop">Belanja Sekarang</span>
                                 </button>
-                                <button class="btn btn-outline" id="btn-seller-area">
+                                <button class="btn btn-outline hidden" id="btn-seller-area">
                                     <i class="fas fa-store"></i>
                                     <span data-lang="btn_seller">Area Penjual</span>
                                 </button>
@@ -413,7 +432,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex gap-4 mt-4">
+                            <div class="flex gap-4 mt-4" id="product-actions">
                                 <button class="btn btn-primary w-full" id="btn-add-cart">
                                     <i class="fas fa-cart-plus"></i>
                                     <span data-lang="add_cart">Tambah ke Keranjang</span>
@@ -438,44 +457,45 @@
                             <i class="fas fa-mug-hot"></i>
                         </div>
                         <h3 class="font-serif" style="color: var(--green-primary);">Darul Ulum Store</h3>
-                        <p style="font-size: 0.875rem; color: var(--text-light);">Admin Panel</p>
+                        <p style="font-size: 0.875rem; color: var(--text-light);">Seller Panel</p>
+                        <span class="role-badge role-seller" style="margin-top: 0.5rem;">PENJUAL</span>
                     </div>
 
                     <ul class="sidebar-menu">
                         <li class="sidebar-item">
                             <button class="sidebar-link active" data-seller-tab="dashboard">
                                 <i class="fas fa-home"></i>
-                                <span data-lang="menu_dashboard">Dashboard</span>
+                                <span>Dashboard</span>
                             </button>
                         </li>
                         <li class="sidebar-item">
                             <button class="sidebar-link" data-seller-tab="products">
                                 <i class="fas fa-box"></i>
-                                <span data-lang="menu_products">Produk</span>
+                                <span>Produk Saya</span>
                             </button>
                         </li>
                         <li class="sidebar-item">
                             <button class="sidebar-link" data-seller-tab="orders">
                                 <i class="fas fa-shopping-bag"></i>
-                                <span data-lang="menu_orders">Pesanan</span>
+                                <span>Pesanan Masuk</span>
                             </button>
                         </li>
                         <li class="sidebar-item">
                             <button class="sidebar-link" data-seller-tab="balance">
                                 <i class="fas fa-wallet"></i>
-                                <span data-lang="menu_balance">Saldo</span>
+                                <span>Saldo & Penarikan</span>
                             </button>
                         </li>
                         <li class="sidebar-item">
                             <button class="sidebar-link" data-seller-tab="shipping">
                                 <i class="fas fa-shipping-fast"></i>
-                                <span data-lang="menu_shipping">Pengiriman</span>
+                                <span>Pengaturan Pengiriman</span>
                             </button>
                         </li>
                         <li class="sidebar-item">
                             <button class="sidebar-link" data-seller-tab="settings">
                                 <i class="fas fa-cog"></i>
-                                <span data-lang="menu_settings">Pengaturan</span>
+                                <span>Pengaturan Toko</span>
                             </button>
                         </li>
                     </ul>
@@ -484,41 +504,41 @@
                 <div class="main-content">
                     <!-- Dashboard Tab -->
                     <div id="seller-dashboard" class="seller-tab">
-                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="seller_overview">Ringkasan Toko</h2>
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);">Dashboard Penjual</h2>
                         
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-label" data-lang="stat_balance">Saldo Tersedia</div>
+                                <div class="stat-label">Saldo Tersedia</div>
                                 <div class="stat-value" id="seller-balance">Rp 0</div>
-                                <div class="stat-change" data-lang="stat_pending">Menunggu: Rp 0</div>
+                                <div class="stat-change">Menunggu: Rp 0</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label" data-lang="stat_orders">Total Pesanan</div>
+                                <div class="stat-label">Total Pesanan</div>
                                 <div class="stat-value" id="total-orders">0</div>
                                 <div class="stat-change" style="color: var(--gold-dark);">↑ 12% bulan ini</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label" data-lang="stat_processing">Sedang Diproses</div>
+                                <div class="stat-label">Sedang Diproses</div>
                                 <div class="stat-value" id="processing-count">0</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label" data-lang="stat_completed">Selesai</div>
+                                <div class="stat-label">Selesai</div>
                                 <div class="stat-value" id="completed-count">0</div>
                             </div>
                         </div>
 
                         <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-top: 2rem;">
-                            <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="recent_orders">Pesanan Terbaru</h3>
+                            <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);">Pesanan Terbaru</h3>
                             <div class="data-table">
                                 <table>
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th data-lang="th_customer">Pelanggan</th>
-                                            <th data-lang="th_product">Produk</th>
-                                            <th data-lang="th_total">Total</th>
-                                            <th data-lang="th_status">Status</th>
-                                            <th data-lang="th_action">Aksi</th>
+                                            <th>Pelanggan</th>
+                                            <th>Produk</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="recent-orders-table"></tbody>
@@ -530,10 +550,10 @@
                     <!-- Products Tab -->
                     <div id="seller-products" class="seller-tab hidden">
                         <div class="flex justify-between items-center mb-4">
-                            <h2 style="color: var(--green-primary);" data-lang="manage_products">Kelola Produk</h2>
+                            <h2 style="color: var(--green-primary);">Kelola Produk</h2>
                             <button class="btn btn-primary" id="btn-add-product-modal">
                                 <i class="fas fa-plus"></i>
-                                <span data-lang="add_product">Tambah Produk</span>
+                                <span>Tambah Produk</span>
                             </button>
                         </div>
                         
@@ -542,11 +562,11 @@
                                 <thead>
                                     <tr>
                                         <th>Gambar</th>
-                                        <th data-lang="th_name">Nama</th>
-                                        <th data-lang="th_price">Harga</th>
-                                        <th data-lang="th_stock">Stok</th>
-                                        <th data-lang="th_weight">Berat</th>
-                                        <th data-lang="th_action">Aksi</th>
+                                        <th>Nama</th>
+                                        <th>Harga</th>
+                                        <th>Stok</th>
+                                        <th>Berat</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="seller-products-table"></tbody>
@@ -556,18 +576,18 @@
 
                     <!-- Orders Tab -->
                     <div id="seller-orders" class="seller-tab hidden">
-                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="process_orders">Proses Pesanan</h2>
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);">Pesanan Masuk</h2>
                         <div class="data-table">
                             <table>
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th data-lang="th_date">Tanggal</th>
-                                        <th data-lang="th_customer">Pelanggan</th>
-                                        <th data-lang="th_items">Item</th>
-                                        <th data-lang="th_total">Total</th>
-                                        <th data-lang="th_status">Status</th>
-                                        <th data-lang="th_action">Aksi</th>
+                                        <th>Tanggal</th>
+                                        <th>Pelanggan</th>
+                                        <th>Item</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="all-orders-table"></tbody>
@@ -577,24 +597,24 @@
 
                     <!-- Balance Tab -->
                     <div id="seller-balance" class="seller-tab hidden">
-                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="balance_title">Saldo & Penarikan</h2>
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);">Saldo & Penarikan</h2>
                         
                         <div style="background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%); color: var(--white); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
-                            <div style="font-size: 1rem; opacity: 0.9; margin-bottom: 0.5rem;" data-lang="available_balance">Saldo Tersedia</div>
+                            <div style="font-size: 1rem; opacity: 0.9; margin-bottom: 0.5rem;">Saldo Tersedia</div>
                             <div style="font-size: 3rem; font-weight: 700;" id="available-balance">Rp 0</div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                             <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow);">
-                                <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="withdraw">Tarik Saldo</h3>
+                                <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);">Tarik Saldo</h3>
                                 
                                 <div class="form-group">
-                                    <label class="form-label" data-lang="withdraw_amount">Jumlah Penarikan</label>
+                                    <label class="form-label">Jumlah Penarikan</label>
                                     <input type="number" class="form-input" id="withdraw-amount" placeholder="Min. Rp 50.000">
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label" data-lang="withdraw_method">Metode</label>
+                                    <label class="form-label">Metode</label>
                                     <select class="form-select" id="withdraw-method">
                                         <option value="bca">Transfer Bank BCA</option>
                                         <option value="bni">Transfer Bank BNI</option>
@@ -607,15 +627,15 @@
 
                                 <button class="btn btn-primary w-full" id="btn-withdraw">
                                     <i class="fas fa-money-bill-wave"></i>
-                                    <span data-lang="btn_withdraw">Tarik Sekarang</span>
+                                    <span>Tarik Sekarang</span>
                                 </button>
                             </div>
 
                             <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow);">
-                                <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="add_account">Tambah Rekening</h3>
+                                <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);">Tambah Rekening</h3>
                                 
                                 <div class="form-group">
-                                    <label class="form-label" data-lang="account_type">Tipe Akun</label>
+                                    <label class="form-label">Tipe Akun</label>
                                     <select class="form-select" id="account-type">
                                         <option value="bank">Rekening Bank</option>
                                         <option value="ewallet">E-Wallet</option>
@@ -623,43 +643,29 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label" data-lang="account_number">Nomor Rekening/Telepon</label>
+                                    <label class="form-label">Nomor Rekening/Telepon</label>
                                     <input type="text" class="form-input" id="account-number" placeholder="Contoh: 1234567890">
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label" data-lang="account_name">Nama Pemilik</label>
+                                    <label class="form-label">Nama Pemilik</label>
                                     <input type="text" class="form-input" id="account-name" placeholder="Nama sesuai KTP">
                                 </div>
 
                                 <button class="btn btn-outline w-full" id="btn-add-account">
                                     <i class="fas fa-plus"></i>
-                                    <span data-lang="btn_add_account">Simpan Rekening</span>
+                                    <span>Simpan Rekening</span>
                                 </button>
-                            </div>
-                        </div>
-
-                        <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-top: 2rem;">
-                            <h3 style="margin-bottom: 1.5rem; color: var(--green-primary);" data-lang="earnings_report">Laporan Penghasilan</h3>
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                                <button class="btn btn-sm btn-outline earnings-btn active" data-period="daily">Harian</button>
-                                <button class="btn btn-sm btn-outline earnings-btn" data-period="weekly">Mingguan</button>
-                                <button class="btn btn-sm btn-outline earnings-btn" data-period="monthly">Bulanan</button>
-                                <button class="btn btn-sm btn-outline earnings-btn" data-period="yearly">Tahunan</button>
-                            </div>
-                            <div id="earnings-chart" style="height: 300px; background: var(--off-white); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--text-light);">
-                                <i class="fas fa-chart-line" style="font-size: 3rem; margin-right: 1rem;"></i>
-                                <span>Grafik Penghasilan akan ditampilkan di sini</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Shipping Tab -->
                     <div id="seller-shipping" class="seller-tab hidden">
-                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);" data-lang="shipping_settings">Pengaturan Pengiriman</h2>
+                        <h2 style="margin-bottom: 2rem; color: var(--green-primary);">Pengaturan Pengiriman</h2>
                         
                         <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-bottom: 2rem;">
-                            <h3 style="margin-bottom: 1.5rem;" data-lang="store_address">Alamat Toko</h3>
+                            <h3 style="margin-bottom: 1.5rem;">Alamat Toko</h3>
                             <div class="form-group">
                                 <label class="form-label">Nama Toko</label>
                                 <input type="text" class="form-input" value="Darul Ulum Store" id="store-name">
@@ -682,7 +688,7 @@
                         </div>
 
                         <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow);">
-                            <h3 style="margin-bottom: 1.5rem;" data-lang="courier_services">Jasa Ekspedisi</h3>
+                            <h3 style="margin-bottom: 1.5rem;">Jasa Ekspedisi</h3>
                             <div style="display: flex; flex-direction: column; gap: 1rem;">
                                 <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid var(--green-primary); border-radius: 0.75rem; background: rgba(45, 80, 22, 0.05); cursor: pointer;">
                                     <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--green-primary);">
@@ -691,14 +697,6 @@
                                         <div style="font-size: 0.875rem; color: var(--text-light);">Gratis Ongkir area Jambi</div>
                                     </div>
                                     <i class="fas fa-check-circle" style="color: var(--green-primary); font-size: 1.5rem;"></i>
-                                </label>
-                                
-                                <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #E5E7EB; border-radius: 0.75rem; opacity: 0.6; cursor: pointer;">
-                                    <input type="checkbox" style="width: 20px; height: 20px;">
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 700;">JNE</div>
-                                        <div style="font-size: 0.875rem; color: var(--text-light);">Coming Soon</div>
-                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -747,8 +745,8 @@
             <section class="section">
                 <div class="container">
                     <div class="section-header">
-                        <h2 class="section-title font-serif" data-lang="track_title">Lacak Pengiriman</h2>
-                        <p class="section-subtitle" data-lang="track_subtitle">Cek status pesanan Anda dengan nomor resi</p>
+                        <h2 class="section-title font-serif">Lacak Pengiriman</h2>
+                        <p class="section-subtitle">Cek status pesanan Anda dengan nomor resi</p>
                     </div>
 
                     <div class="tracking-box">
@@ -767,20 +765,6 @@
                         <div class="tracking-result" id="tracking-result">
                             <h4 style="color: var(--green-primary); margin-bottom: 1rem;">Status Pengiriman</h4>
                             <div class="timeline" id="tracking-timeline"></div>
-                        </div>
-                    </div>
-
-                    <div style="background: var(--white); padding: 2rem; border-radius: 1rem; box-shadow: var(--shadow); margin-top: 2rem;">
-                        <h3 style="color: var(--green-primary); margin-bottom: 1rem;">Informasi Pengiriman</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-                            <div style="padding: 1.5rem; background: var(--off-white); border-radius: 0.75rem; border-left: 4px solid var(--gold);">
-                                <h4 style="color: var(--green-primary); margin-bottom: 0.5rem;">Area Gratis Ongkir</h4>
-                                <p>Seluruh wilayah Provinsi Jambi untuk paket < 1kg</p>
-                            </div>
-                            <div style="padding: 1.5rem; background: var(--off-white); border-radius: 0.75rem; border-left: 4px solid var(--green-primary);">
-                                <h4 style="color: var(--green-primary); margin-bottom: 0.5rem;">Estimasi Pengiriman</h4>
-                                <p>Jambi: 1-2 hari<br>Luar Jambi: 3-5 hari</p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -926,36 +910,82 @@
             </div>
         </div>
 
-        <!-- Login Modal -->
+        <!-- LOGIN MODAL - PILIHAN TIPE AKUN -->
         <div id="login-modal" class="modal">
-            <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-content" style="max-width: 600px;">
                 <div class="modal-header">
-                    <h3 class="modal-title" data-lang="login_title">Masuk ke Akun</h3>
+                    <h3 class="modal-title">Masuk ke Darul Ulum Store</h3>
                     <button class="modal-close" id="close-login">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;" data-lang="login_choose">Pilih metode login</p>
+                    <p style="text-align: center; color: var(--text-light); margin-bottom: 1rem;">Pilih tipe akun Anda</p>
                     
-                    <div class="login-options">
-                        <div class="login-option" id="login-wa-option">
-                            <div class="login-icon"><i class="fab fa-whatsapp"></i></div>
-                            <h4>WhatsApp</h4>
-                            <p style="font-size: 0.875rem; color: var(--text-light);">Login dengan nomor WA</p>
+                    <!-- PILIHAN TIPE AKUN -->
+                    <div class="login-type-grid" id="login-type-selection">
+                        <div class="login-type-card" id="select-buyer">
+                            <div class="login-type-icon">🛒</div>
+                            <div class="login-type-title">Saya Pembeli</div>
+                            <div class="login-type-desc">Beli mug custom, lacak pesanan, dapatkan voucher</div>
                         </div>
-                        <div class="login-option" id="login-google-option">
-                            <div class="login-icon"><i class="fab fa-google"></i></div>
-                            <h4>Google</h4>
-                            <p style="font-size: 0.875rem; color: var(--text-light);">Login dengan Google</p>
+                        <div class="login-type-card" id="select-seller">
+                            <div class="login-type-icon">🏪</div>
+                            <div class="login-type-title">Saya Penjual</div>
+                            <div class="login-type-desc">Kelola produk, proses pesanan, cek saldo</div>
                         </div>
                     </div>
 
-                    <div id="whatsapp-login-form" style="display: none; margin-top: 2rem;">
+                    <!-- FORM LOGIN PEMBELI -->
+                    <div id="buyer-login-form" class="hidden">
+                        <h4 style="text-align: center; color: var(--green-primary); margin-bottom: 1.5rem;">
+                            <span class="role-badge role-buyer">PEMBELI</span>
+                        </h4>
+                        <div class="form-group">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-input" id="buyer-name" placeholder="Contoh: Ahmad Rizky">
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Nomor WhatsApp</label>
-                            <input type="text" class="form-input" id="wa-number" placeholder="08xxxxxxxxxx">
+                            <input type="text" class="form-input" id="buyer-phone" placeholder="08xxxxxxxxxx">
                         </div>
-                        <button class="btn btn-primary w-full" id="btn-verify-wa">
-                            <i class="fab fa-whatsapp"></i> Kirim Kode Verifikasi
+                        <div class="form-group">
+                            <label class="form-label">Email (Opsional)</label>
+                            <input type="email" class="form-input" id="buyer-email" placeholder="email@example.com">
+                        </div>
+                        <button class="btn btn-primary w-full" id="btn-login-buyer">
+                            <i class="fas fa-sign-in-alt"></i> Masuk sebagai Pembeli
+                        </button>
+                        <button class="btn btn-outline w-full mt-2" id="btn-back-type" style="margin-top: 0.5rem;">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </button>
+                    </div>
+
+                    <!-- FORM LOGIN PENJUAL -->
+                    <div id="seller-login-form" class="hidden">
+                        <h4 style="text-align: center; color: var(--green-primary); margin-bottom: 1.5rem;">
+                            <span class="role-badge role-seller">PENJUAL</span>
+                        </h4>
+                        <div class="form-group">
+                            <label class="form-label">Nama Toko</label>
+                            <input type="text" class="form-input" id="seller-store-name" value="Darul Ulum Store">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nomor WhatsApp Bisnis</label>
+                            <input type="text" class="form-input" id="seller-phone" placeholder="08xxxxxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Toko</label>
+                            <input type="email" class="form-input" id="seller-email" placeholder="toko@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kode Akses Penjual</label>
+                            <input type="password" class="form-input" id="seller-code" placeholder="Masukkan kode akses">
+                            <small style="color: var(--text-light);">Demo: ketik "seller123"</small>
+                        </div>
+                        <button class="btn btn-gold w-full" id="btn-login-seller">
+                            <i class="fas fa-store"></i> Masuk sebagai Penjual
+                        </button>
+                        <button class="btn btn-outline w-full" id="btn-back-type-2" style="margin-top: 0.5rem;">
+                            <i class="fas fa-arrow-left"></i> Kembali
                         </button>
                     </div>
                 </div>
@@ -963,7 +993,7 @@
         </div>
     </main>
 
-    <!-- Cart Sidebar -->
+    <!-- Cart Sidebar - Hanya untuk Buyer -->
     <div class="cart-sidebar" id="cart-sidebar">
         <div class="cart-header">
             <h3 style="font-size: 1.25rem;"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</h3>
@@ -999,6 +1029,7 @@
         // DATA & STATE MANAGEMENT
         // ==========================================
         let currentUser = null;
+        let userRole = null; // 'buyer' atau 'seller'
         let currentLang = 'id';
         let cart = [];
         let products = [
@@ -1015,176 +1046,21 @@
         let selectedPayment = 'bca';
 
         // ==========================================
-        // TRANSLATIONS
-        // ==========================================
-        const translations = {
-            id: {
-                top_promo: 'Gratis Ongkir untuk Area Jambi | Custom Mug Berkualitas',
-                tagline: 'Custom Mug Premium',
-                nav_home: 'Beranda',
-                nav_products: 'Produk',
-                nav_tracking: 'Lacak Pesanan',
-                nav_seller: 'Area Penjual',
-                login: 'Masuk',
-                login_wa: 'Login dengan WhatsApp',
-                login_google: 'Login dengan Google',
-                my_profile: 'Profil Saya',
-                my_orders: 'Pesanan Saya',
-                logout: 'Keluar',
-                hero_title: 'Buat Mug Custom Unikmu Sekarang!',
-                hero_subtitle: 'Mug sablon berkualitas premium dengan desain sesuai keinginan Anda. Mulai dari Rp 20.000, gratis ongkir untuk area Jambi!',
-                btn_shop: 'Belanja Sekarang',
-                btn_seller: 'Area Penjual',
-                featured_title: 'Produk Unggulan',
-                featured_subtitle: 'Mug custom berkualitas dengan harga terbaik',
-                all_products: 'Semua Produk',
-                products_subtitle: 'Pilih mug custom favorit Anda',
-                label_variant: 'Varian:',
-                label_design: 'Upload Desain:',
-                design_help: 'Format: JPG, PNG (Max 5MB)',
-                label_quantity: 'Jumlah:',
-                add_cart: 'Tambah ke Keranjang',
-                buy_now: 'Beli Sekarang',
-                seller_overview: 'Ringkasan Toko',
-                stat_balance: 'Saldo Tersedia',
-                stat_pending: 'Menunggu: Rp 0',
-                stat_orders: 'Total Pesanan',
-                stat_processing: 'Sedang Diproses',
-                stat_completed: 'Selesai',
-                recent_orders: 'Pesanan Terbaru',
-                th_customer: 'Pelanggan',
-                th_product: 'Produk',
-                th_total: 'Total',
-                th_status: 'Status',
-                th_action: 'Aksi',
-                manage_products: 'Kelola Produk',
-                add_product: 'Tambah Produk',
-                th_name: 'Nama',
-                th_price: 'Harga',
-                th_stock: 'Stok',
-                th_weight: 'Berat',
-                process_orders: 'Proses Pesanan',
-                th_date: 'Tanggal',
-                th_items: 'Item',
-                balance_title: 'Saldo & Penarikan',
-                available_balance: 'Saldo Tersedia',
-                withdraw: 'Tarik Saldo',
-                withdraw_amount: 'Jumlah Penarikan',
-                withdraw_method: 'Metode',
-                btn_withdraw: 'Tarik Sekarang',
-                add_account: 'Tambah Rekening',
-                account_type: 'Tipe Akun',
-                account_number: 'Nomor Rekening/Telepon',
-                account_name: 'Nama Pemilik',
-                btn_add_account: 'Simpan Rekening',
-                earnings_report: 'Laporan Penghasilan',
-                shipping_settings: 'Pengaturan Pengiriman',
-                store_address: 'Alamat Toko',
-                courier_services: 'Jasa Ekspedisi',
-                track_title: 'Lacak Pengiriman',
-                track_subtitle: 'Cek status pesanan Anda dengan nomor resi',
-                login_title: 'Masuk ke Akun',
-                login_choose: 'Pilih metode login',
-                menu_dashboard: 'Dashboard',
-                menu_products: 'Produk',
-                menu_orders: 'Pesanan',
-                menu_balance: 'Saldo',
-                menu_shipping: 'Pengiriman',
-                menu_settings: 'Pengaturan'
-            },
-            en: {
-                top_promo: 'Free Shipping for Jambi Area | Premium Custom Mugs',
-                tagline: 'Premium Custom Mugs',
-                nav_home: 'Home',
-                nav_products: 'Products',
-                nav_tracking: 'Track Order',
-                nav_seller: 'Seller Area',
-                login: 'Login',
-                login_wa: 'Login with WhatsApp',
-                login_google: 'Login with Google',
-                my_profile: 'My Profile',
-                my_orders: 'My Orders',
-                logout: 'Logout',
-                hero_title: 'Create Your Unique Custom Mug Now!',
-                hero_subtitle: 'Premium quality screen-printed mugs with your custom design. Starting from Rp 20,000, free shipping for Jambi area!',
-                btn_shop: 'Shop Now',
-                btn_seller: 'Seller Area',
-                featured_title: 'Featured Products',
-                featured_subtitle: 'Quality custom mugs at best prices',
-                all_products: 'All Products',
-                products_subtitle: 'Choose your favorite custom mug',
-                label_variant: 'Variant:',
-                label_design: 'Upload Design:',
-                design_help: 'Format: JPG, PNG (Max 5MB)',
-                label_quantity: 'Quantity:',
-                add_cart: 'Add to Cart',
-                buy_now: 'Buy Now',
-                seller_overview: 'Store Overview',
-                stat_balance: 'Available Balance',
-                stat_pending: 'Pending: Rp 0',
-                stat_orders: 'Total Orders',
-                stat_processing: 'Processing',
-                stat_completed: 'Completed',
-                recent_orders: 'Recent Orders',
-                th_customer: 'Customer',
-                th_product: 'Product',
-                th_total: 'Total',
-                th_status: 'Status',
-                th_action: 'Action',
-                manage_products: 'Manage Products',
-                add_product: 'Add Product',
-                th_name: 'Name',
-                th_price: 'Price',
-                th_stock: 'Stock',
-                th_weight: 'Weight',
-                process_orders: 'Process Orders',
-                th_date: 'Date',
-                th_items: 'Items',
-                balance_title: 'Balance & Withdrawal',
-                available_balance: 'Available Balance',
-                withdraw: 'Withdraw Balance',
-                withdraw_amount: 'Withdrawal Amount',
-                withdraw_method: 'Method',
-                btn_withdraw: 'Withdraw Now',
-                add_account: 'Add Account',
-                account_type: 'Account Type',
-                account_number: 'Account Number/Phone',
-                account_name: 'Account Name',
-                btn_add_account: 'Save Account',
-                earnings_report: 'Earnings Report',
-                shipping_settings: 'Shipping Settings',
-                store_address: 'Store Address',
-                courier_services: 'Courier Services',
-                track_title: 'Track Shipment',
-                track_subtitle: 'Check your order status with tracking number',
-                login_title: 'Login to Account',
-                login_choose: 'Choose login method',
-                menu_dashboard: 'Dashboard',
-                menu_products: 'Products',
-                menu_orders: 'Orders',
-                menu_balance: 'Balance',
-                menu_shipping: 'Shipping',
-                menu_settings: 'Settings'
-            }
-        };
-
-        // ==========================================
         // INITIALIZATION
         // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
             initEventListeners();
             loadProducts();
             updateCartUI();
-            applyTranslations();
+            updateUIForRole(); // Set UI awal (belum login)
         });
 
         // ==========================================
-        // EVENT LISTENERS - ALL IN ONE PLACE
+        // EVENT LISTENERS
         // ==========================================
         function initEventListeners() {
             // Navigation
             document.getElementById('header-logo').addEventListener('click', () => showPage('home'));
-            
             document.querySelectorAll('[data-page]').forEach(el => {
                 el.addEventListener('click', (e) => {
                     const page = e.currentTarget.getAttribute('data-page');
@@ -1199,8 +1075,7 @@
             document.getElementById('close-cart').addEventListener('click', toggleCart);
 
             // User Menu
-            document.getElementById('menu-login-wa').addEventListener('click', openLoginModal);
-            document.getElementById('menu-login-google').addEventListener('click', openLoginModal);
+            document.getElementById('menu-login').addEventListener('click', openLoginModal);
             document.getElementById('menu-logout').addEventListener('click', logout);
 
             // Hero Buttons
@@ -1229,11 +1104,20 @@
                 });
             });
 
-            // Login Modal
+            // LOGIN SYSTEM - PEMILIHAN TIPE AKUN
             document.getElementById('close-login').addEventListener('click', () => closeModal('login-modal'));
-            document.getElementById('login-wa-option').addEventListener('click', showWhatsAppForm);
-            document.getElementById('login-google-option').addEventListener('click', loginWithGoogle);
-            document.getElementById('btn-verify-wa').addEventListener('click', verifyWhatsApp);
+            
+            // Pilih tipe akun
+            document.getElementById('select-buyer').addEventListener('click', () => showLoginForm('buyer'));
+            document.getElementById('select-seller').addEventListener('click', () => showLoginForm('seller'));
+            
+            // Kembali ke pilihan tipe
+            document.getElementById('btn-back-type').addEventListener('click', showLoginTypeSelection);
+            document.getElementById('btn-back-type-2').addEventListener('click', showLoginTypeSelection);
+            
+            // Login buttons
+            document.getElementById('btn-login-buyer').addEventListener('click', loginAsBuyer);
+            document.getElementById('btn-login-seller').addEventListener('click', loginAsSeller);
 
             // Add Product Modal
             document.getElementById('close-add-product').addEventListener('click', () => closeModal('add-product-modal'));
@@ -1254,16 +1138,6 @@
             document.getElementById('btn-save-store').addEventListener('click', saveStoreInfo);
             document.getElementById('btn-change-logo').addEventListener('click', changeLogo);
             document.getElementById('btn-save-settings').addEventListener('click', saveSettings);
-
-            // Earnings Buttons
-            document.querySelectorAll('.earnings-btn').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    document.querySelectorAll('.earnings-btn').forEach(btn => btn.classList.remove('active'));
-                    e.target.classList.add('active');
-                    const period = e.target.getAttribute('data-period');
-                    showToast(`Menampilkan laporan ${period}`, 'info');
-                });
-            });
 
             // Tracking
             document.getElementById('btn-track').addEventListener('click', trackOrder);
@@ -1295,51 +1169,221 @@
         }
 
         // ==========================================
-        // EVENT DELEGATION - FOR DYNAMIC ELEMENTS
+        // EVENT DELEGATION
         // ==========================================
         document.addEventListener('click', function(e) {
-            // Quick Add to Cart
             if (e.target.closest('.btn-quick-add')) {
                 const id = parseInt(e.target.closest('.btn-quick-add').getAttribute('data-id'));
                 quickAddToCart(id);
             }
-            
-            // Quick Buy
             if (e.target.closest('.btn-quick-buy')) {
                 const id = parseInt(e.target.closest('.btn-quick-buy').getAttribute('data-id'));
                 quickBuy(id);
             }
-            
-            // Remove from cart
             if (e.target.closest('.btn-remove-cart')) {
                 const cartId = parseInt(e.target.closest('.btn-remove-cart').getAttribute('data-cart-id'));
                 removeFromCart(cartId);
             }
-            
-            // Process order
             if (e.target.closest('.btn-process-order')) {
                 const orderId = e.target.closest('.btn-process-order').getAttribute('data-id');
                 processOrder(orderId);
             }
-            
-            // Ship order
             if (e.target.closest('.btn-ship-order')) {
                 const orderId = e.target.closest('.btn-ship-order').getAttribute('data-id');
                 shipOrder(orderId);
             }
-            
-            // Edit product
             if (e.target.closest('.btn-edit-product')) {
                 const id = parseInt(e.target.closest('.btn-edit-product').getAttribute('data-id'));
                 editProduct(id);
             }
-            
-            // Confirm received
             if (e.target.closest('.btn-confirm-received')) {
                 const orderId = e.target.closest('.btn-confirm-received').getAttribute('data-id');
                 confirmReceived(orderId);
             }
         });
+
+        // ==========================================
+        // LOGIN SYSTEM - PEMBEDAAN AKUN
+        // ==========================================
+        
+        function openLoginModal() {
+            showLoginTypeSelection();
+            openModal('login-modal');
+        }
+
+        function showLoginTypeSelection() {
+            document.getElementById('login-type-selection').classList.remove('hidden');
+            document.getElementById('buyer-login-form').classList.add('hidden');
+            document.getElementById('seller-login-form').classList.add('hidden');
+            
+            // Reset selection styling
+            document.getElementById('select-buyer').classList.remove('selected');
+            document.getElementById('select-seller').classList.remove('selected');
+        }
+
+        function showLoginForm(type) {
+            document.getElementById('login-type-selection').classList.add('hidden');
+            
+            if (type === 'buyer') {
+                document.getElementById('buyer-login-form').classList.remove('hidden');
+                document.getElementById('select-buyer').classList.add('selected');
+            } else {
+                document.getElementById('seller-login-form').classList.remove('hidden');
+                document.getElementById('select-seller').classList.add('selected');
+            }
+        }
+
+        function loginAsBuyer() {
+            const name = document.getElementById('buyer-name').value;
+            const phone = document.getElementById('buyer-phone').value;
+            
+            if (!name || !phone) {
+                showToast('Nama dan nomor WhatsApp wajib diisi!', 'error');
+                return;
+            }
+            
+            currentUser = { 
+                name: name, 
+                phone: phone, 
+                email: document.getElementById('buyer-email').value || '-',
+                type: 'buyer' 
+            };
+            userRole = 'buyer';
+            
+            closeModal('login-modal');
+            updateUIForRole();
+            showToast(`Selamat datang, ${name}! Anda login sebagai Pembeli`, 'success');
+            
+            // Clear form
+            document.getElementById('buyer-name').value = '';
+            document.getElementById('buyer-phone').value = '';
+            document.getElementById('buyer-email').value = '';
+        }
+
+        function loginAsSeller() {
+            const storeName = document.getElementById('seller-store-name').value;
+            const phone = document.getElementById('seller-phone').value;
+            const code = document.getElementById('seller-code').value;
+            
+            if (!storeName || !phone) {
+                showToast('Nama toko dan nomor WhatsApp wajib diisi!', 'error');
+                return;
+            }
+            
+            // Verifikasi kode sederhana (dalam produksi sebenarnya, ini adalah sistem autentikasi yang aman)
+            if (code !== 'seller123') {
+                showToast('Kode akses penjual salah! Demo: ketik "seller123"', 'error');
+                return;
+            }
+            
+            currentUser = { 
+                name: storeName, 
+                phone: phone, 
+                email: document.getElementById('seller-email').value || '-',
+                type: 'seller' 
+            };
+            userRole = 'seller';
+            
+            closeModal('login-modal');
+            updateUIForRole();
+            showToast(`Selamat datang, ${storeName}! Anda login sebagai Penjual`, 'success');
+            
+            // Auto redirect ke seller dashboard
+            showPage('seller');
+            
+            // Clear sensitive form
+            document.getElementById('seller-code').value = '';
+        }
+
+        function logout() {
+            currentUser = null;
+            userRole = null;
+            cart = []; // Kosongkan keranjang saat logout
+            
+            updateUIForRole();
+            updateCartUI();
+            showToast('Berhasil logout!', 'info');
+            showPage('home');
+        }
+
+        // ==========================================
+        // UI UPDATE BERDASARKAN ROLE
+        // ==========================================
+        
+        function updateUIForRole() {
+            const navSeller = document.getElementById('nav-seller');
+            const btnCart = document.getElementById('btn-cart');
+            const btnSellerArea = document.getElementById('btn-seller-area');
+            const userName = document.getElementById('user-name');
+            const userRoleBadge = document.getElementById('user-role');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            
+            // Menu items
+            const menuLogin = document.getElementById('menu-login');
+            const menuProfile = document.getElementById('menu-profile');
+            const menuOrders = document.getElementById('menu-orders');
+            const menuSellerDashboard = document.getElementById('menu-seller-dashboard');
+            const menuLogout = document.getElementById('menu-logout');
+            
+            // Product actions
+            const productActions = document.getElementById('product-actions');
+            
+            if (!currentUser) {
+                // BELUM LOGIN - Tampilan default
+                navSeller.classList.add('hidden');
+                btnCart.classList.remove('hidden'); // Cart tetap visible tapi tidak bisa checkout
+                btnSellerArea.classList.add('hidden');
+                userName.textContent = 'Masuk';
+                userRoleBadge.classList.add('hidden');
+                
+                menuLogin.classList.remove('hidden');
+                menuProfile.classList.add('hidden');
+                menuOrders.classList.add('hidden');
+                menuSellerDashboard.classList.add('hidden');
+                menuLogout.classList.add('hidden');
+                
+            } else if (userRole === 'buyer') {
+                // LOGIN SEBAGAI PEMBELI
+                navSeller.classList.add('hidden'); // Buyer tidak lihat nav seller
+                btnCart.classList.remove('hidden'); // Buyer punya cart
+                btnSellerArea.classList.add('hidden'); // Buyer tidak perlu tombol seller area
+                userName.textContent = currentUser.name;
+                userRoleBadge.textContent = 'PEMBELI';
+                userRoleBadge.className = 'role-badge role-buyer';
+                userRoleBadge.classList.remove('hidden');
+                
+                menuLogin.classList.add('hidden');
+                menuProfile.classList.remove('hidden');
+                menuOrders.classList.remove('hidden');
+                menuSellerDashboard.classList.add('hidden'); // Buyer tidak lihat menu seller
+                menuLogout.classList.remove('hidden');
+                
+                // Product modal: tampilkan tombol beli
+                if (productActions) productActions.classList.remove('hidden');
+                
+            } else if (userRole === 'seller') {
+                // LOGIN SEBAGAI PENJUAL
+                navSeller.classList.remove('hidden'); // Seller lihat nav seller
+                btnCart.classList.add('hidden'); // Seller tidak perlu cart
+                btnSellerArea.classList.remove('hidden'); // Seller lihat tombol seller area
+                userName.textContent = currentUser.name;
+                userRoleBadge.textContent = 'PENJUAL';
+                userRoleBadge.className = 'role-badge role-seller';
+                userRoleBadge.classList.remove('hidden');
+                
+                menuLogin.classList.add('hidden');
+                menuProfile.classList.add('hidden'); // Seller tidak perlu profile buyer
+                menuOrders.classList.add('hidden'); // Seller tidak perlu orders buyer
+                menuSellerDashboard.classList.remove('hidden'); // Seller lihat dashboard
+                menuLogout.classList.remove('hidden');
+                
+                // Tutup cart jika terbuka
+                cartSidebar.classList.remove('active');
+                
+                // Product modal: sembunyikan tombol beli (seller tidak beli dari dirinya sendiri)
+                if (productActions) productActions.classList.add('hidden');
+            }
+        }
 
         // ==========================================
         // MODAL SYSTEM
@@ -1364,6 +1408,18 @@
         // NAVIGATION
         // ==========================================
         function showPage(pageName) {
+            // Cek akses halaman berdasarkan role
+            if (pageName === 'seller' && userRole !== 'seller') {
+                showToast('Anda harus login sebagai Penjual untuk mengakses halaman ini!', 'error');
+                openLoginModal();
+                return;
+            }
+            
+            if (pageName === 'orders' && userRole !== 'buyer') {
+                showToast('Anda harus login sebagai Pembeli untuk melihat pesanan!', 'info');
+                return;
+            }
+            
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             const targetPage = document.getElementById(`page-${pageName}`);
             if (targetPage) {
@@ -1398,18 +1454,7 @@
         function toggleLanguage() {
             currentLang = currentLang === 'id' ? 'en' : 'id';
             document.getElementById('lang-text').textContent = currentLang.toUpperCase();
-            applyTranslations();
             showToast(currentLang === 'id' ? 'Bahasa diubah ke Indonesia' : 'Language changed to English', 'info');
-        }
-
-        function applyTranslations() {
-            const texts = translations[currentLang];
-            document.querySelectorAll('[data-lang]').forEach(el => {
-                const key = el.getAttribute('data-lang');
-                if (texts[key]) {
-                    el.textContent = texts[key];
-                }
-            });
         }
 
         // ==========================================
@@ -1460,6 +1505,14 @@
             document.getElementById('modal-product-title').textContent = currentProduct.name;
             document.getElementById('modal-product-price').textContent = `Rp ${formatNumber(currentProduct.price)}`;
             document.getElementById('shipping-base').textContent = `Rp ${formatNumber(currentProduct.price)}`;
+            
+            // Sesuaikan tombol berdasarkan role
+            const productActions = document.getElementById('product-actions');
+            if (userRole === 'seller') {
+                productActions.classList.add('hidden');
+            } else {
+                productActions.classList.remove('hidden');
+            }
             
             updateTotal();
             openModal('product-modal');
@@ -1512,6 +1565,11 @@
         }
 
         function quickAddToCart(productId) {
+            if (userRole === 'seller') {
+                showToast('Anda login sebagai Penjual. Tidak dapat menambah ke keranjang.', 'error');
+                return;
+            }
+            
             const product = products.find(p => p.id === productId);
             if (product) {
                 cart.push({
@@ -1527,6 +1585,10 @@
         }
 
         function quickBuy(productId) {
+            if (userRole === 'seller') {
+                showToast('Anda login sebagai Penjual. Silakan login sebagai Pembeli untuk berbelanja.', 'error');
+                return;
+            }
             quickAddToCart(productId);
             openCheckout();
         }
@@ -1540,6 +1602,10 @@
         // CART FUNCTIONS
         // ==========================================
         function toggleCart() {
+            if (userRole === 'seller') {
+                showToast('Anda login sebagai Penjual. Tidak memiliki keranjang belanja.', 'info');
+                return;
+            }
             document.getElementById('cart-sidebar').classList.toggle('active');
         }
 
@@ -1584,6 +1650,12 @@
         // CHECKOUT FUNCTIONS
         // ==========================================
         function openCheckout() {
+            if (userRole !== 'buyer') {
+                showToast('Anda harus login sebagai Pembeli untuk checkout!', 'error');
+                openLoginModal();
+                return;
+            }
+            
             if (cart.length === 0) {
                 showToast('Keranjang masih kosong!', 'error');
                 return;
@@ -1650,7 +1722,7 @@
                 payment: selectedPayment,
                 status: 'processing',
                 date: new Date().toISOString(),
-                customer: currentUser || { name: 'Guest', phone: '-' },
+                customer: currentUser,
                 tracking: 'JTE' + Math.random().toString(36).substr(2, 9).toUpperCase(),
                 voucherClaimed: false
             };
@@ -1878,9 +1950,6 @@
             showToast('Edit produk ID: ' + id, 'info');
         }
 
-        // ==========================================
-        // BALANCE & WITHDRAWAL
-        // ==========================================
         function processWithdrawal() {
             const amount = parseInt(document.getElementById('withdraw-amount').value);
             if (!amount || amount < 50000) {
@@ -1910,17 +1979,22 @@
         // ==========================================
         function loadCustomerOrders() {
             const container = document.getElementById('customer-orders-list');
-            if (orders.length === 0) {
+            
+            // Filter orders untuk buyer yang login
+            const myOrders = orders.filter(o => o.customer.phone === (currentUser?.phone || ''));
+            
+            if (myOrders.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-box-open"></i>
                         <p>Belum ada pesanan</p>
+                        <button class="btn btn-primary mt-4" onclick="showPage('products')">Belanja Sekarang</button>
                     </div>
                 `;
                 return;
             }
             
-            container.innerHTML = orders.map(o => `
+            container.innerHTML = myOrders.map(o => `
                 <div style="background: var(--white); padding: 1.5rem; border-radius: 1rem; box-shadow: var(--shadow); margin-bottom: 1rem; border-left: 4px solid var(--gold);">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
                         <div>
@@ -1968,8 +2042,10 @@
                 setTimeout(() => {
                     sellerBalance += order.subtotal;
                     pendingBalance -= order.subtotal;
-                    document.getElementById('seller-balance').textContent = `Rp ${formatNumber(sellerBalance)}`;
-                    document.getElementById('available-balance').textContent = `Rp ${formatNumber(sellerBalance)}`;
+                    if (document.getElementById('seller-balance')) {
+                        document.getElementById('seller-balance').textContent = `Rp ${formatNumber(sellerBalance)}`;
+                        document.getElementById('available-balance').textContent = `Rp ${formatNumber(sellerBalance)}`;
+                    }
                     showToast('Saldo telah ditransfer ke penjual!', 'success');
                 }, 1000);
                 
@@ -1985,55 +2061,16 @@
             document.getElementById('user-dropdown').classList.toggle('active');
         }
 
-        function openLoginModal() {
-            document.getElementById('whatsapp-login-form').style.display = 'none';
-            openModal('login-modal');
+        function saveStoreInfo() {
+            showToast('Informasi toko disimpan!', 'success');
         }
 
-        function showWhatsAppForm() {
-            document.getElementById('whatsapp-login-form').style.display = 'block';
+        function changeLogo() {
+            showToast('Fitur upload logo akan membuka file picker', 'info');
         }
 
-        function verifyWhatsApp() {
-            const phone = document.getElementById('wa-number').value;
-            if (phone.length < 10) {
-                showToast('Nomor tidak valid!', 'error');
-                return;
-            }
-            
-            currentUser = { name: 'User ' + phone.slice(-4), phone: phone, type: 'whatsapp' };
-            closeModal('login-modal');
-            updateAuthUI();
-            showToast('Login berhasil dengan WhatsApp!', 'success');
-        }
-
-        function loginWithGoogle() {
-            currentUser = { name: 'Google User', email: 'user@gmail.com', type: 'google' };
-            closeModal('login-modal');
-            updateAuthUI();
-            showToast('Login berhasil dengan Google!', 'success');
-        }
-
-        function updateAuthUI() {
-            if (currentUser) {
-                document.getElementById('user-name').textContent = currentUser.name;
-                document.getElementById('menu-profile').classList.remove('hidden');
-                document.getElementById('menu-orders').classList.remove('hidden');
-                document.getElementById('menu-logout').classList.remove('hidden');
-                document.getElementById('menu-login-wa').classList.add('hidden');
-                document.getElementById('menu-login-google').classList.add('hidden');
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('user-name').textContent = currentLang === 'id' ? 'Masuk' : 'Login';
-            document.getElementById('menu-profile').classList.add('hidden');
-            document.getElementById('menu-orders').classList.add('hidden');
-            document.getElementById('menu-logout').classList.add('hidden');
-            document.getElementById('menu-login-wa').classList.remove('hidden');
-            document.getElementById('menu-login-google').classList.remove('hidden');
-            showToast('Berhasil logout!', 'info');
+        function saveSettings() {
+            showToast('Pengaturan disimpan!', 'success');
         }
 
         // ==========================================
@@ -2051,18 +2088,6 @@
 
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
-
-        function saveStoreInfo() {
-            showToast('Informasi toko disimpan!', 'success');
-        }
-
-        function changeLogo() {
-            showToast('Fitur upload logo akan membuka file picker', 'info');
-        }
-
-        function saveSettings() {
-            showToast('Pengaturan disimpan!', 'success');
         }
 
         // Product card click handler
